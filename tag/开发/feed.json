@@ -1,0 +1,19 @@
+{
+    "version": "https://jsonfeed.org/version/1",
+    "title": "花咲く • All posts by \"开发\" tag",
+    "description": "编程笔记 & 学渣的自救",
+    "home_page_url": "http://example.com",
+    "items": [
+        {
+            "id": "http://example.com/2023/04/25/Mac-M2%E6%9C%BA%E5%9E%8B%E5%BC%80%E5%8F%91%E9%97%AE%E9%A2%98/",
+            "url": "http://example.com/2023/04/25/Mac-M2%E6%9C%BA%E5%9E%8B%E5%BC%80%E5%8F%91%E9%97%AE%E9%A2%98/",
+            "title": "Mac M2机型开发问题",
+            "date_published": "2023-04-25T13:17:33.000Z",
+            "content_html": "<h3 id=\"blog环境初始化问题\"><a class=\"anchor\" href=\"#blog环境初始化问题\">#</a> Blog 环境初始化问题</h3>\n<h4 id=\"1puppeteer安装问题\"><a class=\"anchor\" href=\"#1puppeteer安装问题\">#</a> 1.puppeteer 安装问题</h4>\n<p>出现了 <code>The chromium binary is not available for arm64</code>  这个错误<br />\n <figure class=\"highlight plaintext\"><table><tr><td class=\"gutter\"><pre><span class=\"line\">1</span><br><span class=\"line\">2</span><br><span class=\"line\">3</span><br><span class=\"line\">4</span><br><span class=\"line\">5</span><br><span class=\"line\">6</span><br><span class=\"line\">7</span><br><span class=\"line\">8</span><br><span class=\"line\">9</span><br></pre></td><td class=\"code\"><pre><span class=\"line\">#解决办法</span><br><span class=\"line\">1.install homebrew</span><br><span class=\"line\">2.install chromium by hand</span><br><span class=\"line\">\tbrew install --cask eloston-chromium</span><br><span class=\"line\">3.install puppeteer and skip chromium installation</span><br><span class=\"line\">\tPUPPETEER_SKIP_CHROMIUM_DOWNLOAD=1 npm i puppeteer</span><br><span class=\"line\">4.set env path in ~/.bash_profile</span><br><span class=\"line\">\texport PUPPETEER_EXECUTABLE_PATH=&#x27;/Applications/Chromium.app/Contents/MacOS/Chromium&#x27;</span><br><span class=\"line\">\tthe path is the real path that you downloaded on step 2</span><br></pre></td></tr></table></figure></p>\n<h4 id=\"2npm-install-g-全局安装npm包权限报错\"><a class=\"anchor\" href=\"#2npm-install-g-全局安装npm包权限报错\">#</a> 2.npm install -g 全局安装 npm 包权限报错</h4>\n<p>使用 npm 安装 node 模块时报错： <code>EACCES permissions errors</code> <br />\n 解决方式：手动更改 npm 的默认安装地址<br />\n <figure class=\"highlight plaintext\"><table><tr><td class=\"gutter\"><pre><span class=\"line\">1</span><br><span class=\"line\">2</span><br><span class=\"line\">3</span><br><span class=\"line\">4</span><br><span class=\"line\">5</span><br><span class=\"line\">6</span><br><span class=\"line\">7</span><br><span class=\"line\">8</span><br></pre></td><td class=\"code\"><pre><span class=\"line\">1.create custom global npm dir</span><br><span class=\"line\">\tmkdir ~/.npm-global</span><br><span class=\"line\">2.config the npm to use new dir</span><br><span class=\"line\">\tnpm config set prefix &#x27;~/.npm-global&#x27;</span><br><span class=\"line\">3.open your .bash_profile file in vim,and a line code:</span><br><span class=\"line\">\texport PATH=~/.npm-global/bin:$PATH</span><br><span class=\"line\">4.update system variables.</span><br><span class=\"line\">\tsource ~/.bash_profile</span><br></pre></td></tr></table></figure></p>\n",
+            "tags": [
+                "开发",
+                "Mac"
+            ]
+        }
+    ]
+}

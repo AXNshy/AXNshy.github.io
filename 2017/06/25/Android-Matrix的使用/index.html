@@ -1,0 +1,573 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#FFF">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+<link rel="alternate" type="application/rss+xml" title="花咲く" href="http://example.com/rss.xml" />
+<link rel="alternate" type="application/atom+xml" title="花咲く" href="http://example.com/atom.xml" />
+<link rel="alternate" type="application/json" title="花咲く" href="http://example.com/feed.json" />
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Mulish:300,300italic,400,400italic,700,700italic%7CFredericka%20the%20Great:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20JP:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20SC:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="/css/app.css?v=0.2.5">
+
+  
+  <meta name="keywords" content="Android,图像处理" />
+
+
+<link rel="canonical" href="http://example.com/2017/06/25/Android-Matrix%E7%9A%84%E4%BD%BF%E7%94%A8/">
+
+
+
+  <title>
+Android Matrix的使用 |
+Hanasaku = 花咲く = blog</title>
+<meta name="generator" content="Hexo 6.1.0"></head>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div id="loading">
+    <div class="cat">
+      <div class="body"></div>
+      <div class="head">
+        <div class="face"></div>
+      </div>
+      <div class="foot">
+        <div class="tummy-end"></div>
+        <div class="bottom"></div>
+        <div class="legs left"></div>
+        <div class="legs right"></div>
+      </div>
+      <div class="paw">
+        <div class="hands left"></div>
+        <div class="hands right"></div>
+      </div>
+    </div>
+  </div>
+  <div id="container">
+    <header id="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="inner">
+        <div id="brand">
+          <div class="pjax">
+          
+  <h1 itemprop="name headline">Android Matrix的使用
+  </h1>
+  
+<div class="meta">
+  <span class="item" title="Created: 2017-06-25 21:46:23">
+    <span class="icon">
+      <i class="ic i-calendar"></i>
+    </span>
+    <span class="text">Posted on</span>
+    <time itemprop="dateCreated datePublished" datetime="2017-06-25T21:46:23+08:00">2017-06-25</time>
+  </span>
+  <span class="item" title="Symbols count in article">
+    <span class="icon">
+      <i class="ic i-pen"></i>
+    </span>
+    <span class="text">Symbols count in article</span>
+    <span>495</span>
+    <span class="text">words</span>
+  </span>
+  <span class="item" title="Reading time">
+    <span class="icon">
+      <i class="ic i-clock"></i>
+    </span>
+    <span class="text">Reading time</span>
+    <span>1 mins.</span>
+  </span>
+</div>
+
+
+          </div>
+        </div>
+        <nav id="nav">
+  <div class="inner">
+    <div class="toggle">
+      <div class="lines" aria-label="Toggle navigation bar">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </div>
+    <ul class="menu">
+      <li class="item title"><a href="/" rel="start">Hanasaku</a></li>
+    </ul>
+    <ul class="right">
+      <li class="item theme">
+        <i class="ic i-sun"></i>
+      </li>
+      <li class="item search">
+        <i class="ic i-search"></i>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+      </div>
+      <div id="imgs" class="pjax">
+        <ul>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gicivghyooj20zk0m8dir.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1giclxxcb6rj20zk0m8b29.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1giclwuom7cj20zk0m8dvn.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gipexoj0moj20zk0m8kgu.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1giclflwv2aj20zk0m84qp.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1giciundwu5j20zk0m8n9e.jpg"></li>
+        </ul>
+      </div>
+    </header>
+    <div id="waves">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" />
+          <use xlink:href="#gentle-wave" x="48" y="3" />
+          <use xlink:href="#gentle-wave" x="48" y="5" />
+          <use xlink:href="#gentle-wave" x="48" y="7" />
+        </g>
+      </svg>
+    </div>
+    <main>
+      <div class="inner">
+        <div id="main" class="pjax">
+          
+  <div class="article wrap">
+    
+<div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<i class="ic i-home"></i>
+<span><a href="/">Home</a></span>
+</div>
+
+    <article itemscope itemtype="http://schema.org/Article" class="post block" lang="cn">
+  <link itemprop="mainEntityOfPage" href="http://example.com/2017/06/25/Android-Matrix%E7%9A%84%E4%BD%BF%E7%94%A8/">
+
+  <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="image" content="/images/avatar.png">
+    <meta itemprop="name" content="Luffy Xu">
+    <meta itemprop="description" content="blog, 编程笔记 & 学渣的自救">
+  </span>
+
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="花咲く">
+  </span>
+
+  <div class="body md" itemprop="articleBody">
+    
+
+    <p>#Learn the Matrix Class in Android</p>
+<p>参考:<span class="exturl" data-url="aHR0cDovL3d3dy5nY3NzbG9vcC5jb20vY3VzdG9tdmlldy9NYXRyaXhfQmFzaWM=">GcsSloop 的博客</span></p>
+<h3 id="1matrix是android中graphics包下的一个类主要用来对图像进行平移-缩放-旋转-透视-错切等操作"><a class="anchor" href="#1matrix是android中graphics包下的一个类主要用来对图像进行平移-缩放-旋转-透视-错切等操作">#</a> 1.Matrix 是 Android 中 Graphics 包下的一个类，主要用来对图像进行平移、缩放、旋转、透视、错切等操作。</h3>
+<p>Matrix 对象实际是一个 3x3 的矩阵。每个值都有不同的用处：</p>
+<p>mScalaX     mSkewX    mTransfX</p>
+<p>mSkewY      mScalaY   mTransfY</p>
+<p>mPersp0     mPersp1   mPersp 2</p>
+<p>scalax, scalay 用于缩放<br />
+ skewx,skewy 用于错切<br />
+ transfx,transfy 用于平移<br />
+ persp0,persp1,persp2 用于透视</p>
+<h3 id="2关于matrix的要点"><a class="anchor" href="#2关于matrix的要点">#</a> 2. 关于 Matrix 的要点</h3>
+<ul>
+<li>所有的操作 (旋转、平移、缩放、错切) 默认都是以坐标原点为基准点的。</li>
+<li>之前操作的坐标系状态会保留，并且影响到后续状态。</li>
+</ul>
+<h3 id="3martirx的方法"><a class="anchor" href="#3martirx的方法">#</a> 3.Martirx 的方法</h3>
+<blockquote>
+<p>pre<br />
+pre 为前缀的方法的意思是右乘，意思是当前矩阵乘以目标矩阵</p>
+<blockquote>
+<p>preScala()</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<p>preTranslate()</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<p>preRotate()</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<p>post<br />
+post 为前缀的方法的意思是左乘，意思是目标矩阵乘以当前矩阵</p>
+</blockquote>
+<blockquote>
+<blockquote>
+<p>postScala()</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<p>postTranslate()</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<p>postRotate()</p>
+</blockquote>
+</blockquote>
+
+      <div class="tags">
+          <a href="/tags/Android/" rel="tag"><i class="ic i-tag"></i> Android</a>
+          <a href="/tags/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/" rel="tag"><i class="ic i-tag"></i> 图像处理</a>
+      </div>
+  </div>
+
+   <footer>
+
+    <div class="meta">
+  <span class="item">
+    <span class="icon">
+      <i class="ic i-calendar-check"></i>
+    </span>
+    <span class="text">Edited on</span>
+    <time title="Modified: 2023-04-24 21:19:10" itemprop="dateModified" datetime="2023-04-24T21:19:10+08:00">2023-04-24</time>
+  </span>
+  <span id="2017/06/25/Android-Matrix的使用/" class="item leancloud_visitors" data-flag-title="Android Matrix的使用" title="Views">
+      <span class="icon">
+        <i class="ic i-eye"></i>
+      </span>
+      <span class="text">Views</span>
+      <span class="leancloud-visitors-count"></span>
+      <span class="text">times</span>
+  </span>
+</div>
+
+      
+
+<div id="copyright">
+<ul>
+  <li class="author">
+    <strong>Post author:  </strong>Luffy Xu <i class="ic i-at"><em>@</em></i>花咲く
+  </li>
+  <li class="link">
+    <strong>Post link: </strong>
+    <a href="http://example.com/2017/06/25/Android-Matrix%E7%9A%84%E4%BD%BF%E7%94%A8/" title="Android Matrix的使用">http://example.com/2017/06/25/Android-Matrix的使用/</a>
+  </li>
+  <li class="license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+  </footer>
+
+</article>
+
+  </div>
+  
+
+<div class="post-nav">
+    <div class="item left">
+      
+
+  <a href="/2017/06/11/%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva2.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1giclxfdlttj20zk0m8npd.jpg" title="希尔排序算法">
+  <span class="type">Previous Post</span>
+  <span class="category"><i class="ic i-flag"></i> </span>
+  <h3>希尔排序算法</h3>
+  </a>
+
+    </div>
+    <div class="item right">
+      
+
+  <a href="/2017/07/10/OpenGL-ES2-0%E4%B8%AD%E7%9A%84%E5%85%89%E7%85%A7/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tva2.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gipesng5oej20zk0m87d4.jpg" title="OpenGL ES2.0中的光照">
+  <span class="type">Next Post</span>
+  <span class="category"><i class="ic i-flag"></i> </span>
+  <h3>OpenGL ES2.0中的光照</h3>
+  </a>
+
+    </div>
+</div>
+
+  
+  <div class="wrap" id="comments"></div>
+
+
+        </div>
+        <div id="sidebar">
+          
+
+<div class="inner">
+
+  <div class="panels">
+    <div class="inner">
+      <div class="contents panel pjax" data-title="Contents">
+          <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1matrix%E6%98%AFandroid%E4%B8%ADgraphics%E5%8C%85%E4%B8%8B%E7%9A%84%E4%B8%80%E4%B8%AA%E7%B1%BB%E4%B8%BB%E8%A6%81%E7%94%A8%E6%9D%A5%E5%AF%B9%E5%9B%BE%E5%83%8F%E8%BF%9B%E8%A1%8C%E5%B9%B3%E7%A7%BB-%E7%BC%A9%E6%94%BE-%E6%97%8B%E8%BD%AC-%E9%80%8F%E8%A7%86-%E9%94%99%E5%88%87%E7%AD%89%E6%93%8D%E4%BD%9C"><span class="toc-number">1.</span> <span class="toc-text"> 1.Matrix 是 Android 中 Graphics 包下的一个类，主要用来对图像进行平移、缩放、旋转、透视、错切等操作。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%E5%85%B3%E4%BA%8Ematrix%E7%9A%84%E8%A6%81%E7%82%B9"><span class="toc-number">2.</span> <span class="toc-text"> 2. 关于 Matrix 的要点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3martirx%E7%9A%84%E6%96%B9%E6%B3%95"><span class="toc-number">3.</span> <span class="toc-text"> 3.Martirx 的方法</span></a></li></ol>
+      </div>
+      <div class="related panel pjax" data-title="Related">
+      </div>
+      <div class="overview panel" data-title="Overview">
+        <div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="image" itemprop="image" alt="Luffy Xu"
+      data-src="/images/avatar.png">
+  <p class="name" itemprop="name">Luffy Xu</p>
+  <div class="description" itemprop="description">编程笔记 & 学渣的自救</div>
+</div>
+
+<nav class="state">
+    <div class="item posts">
+      <a href="/archives/">
+        <span class="count">31</span>
+        <span class="name">posts</span>
+      </a>
+    </div>
+    <div class="item tags">
+      <a href="/tags/">
+        <span class="count">33</span>
+        <span class="name">tags</span>
+      </a>
+    </div>
+</nav>
+
+<div class="social">
+      <span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWU=" title="https:&#x2F;&#x2F;github.com&#x2F;amehime"><i class="ic i-github"></i></span>
+      <span class="exturl item twitter" data-url="aHR0cHM6Ly90d2l0dGVyLmNvbS9hbWVoaW1l" title="https:&#x2F;&#x2F;twitter.com&#x2F;amehime"><i class="ic i-twitter"></i></span>
+      <span class="exturl item zhihu" data-url="aHR0cHM6Ly93d3cuemhpaHUuY29tL3Blb3BsZS9ydXJpc216aw==" title="https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;rurismzk"><i class="ic i-zhihu"></i></span>
+      <span class="exturl item music" data-url="aHR0cHM6Ly9tdXNpYy4xNjMuY29tLyMvdXNlci9ob21lP2lkPTEyODg2ODIz" title="https:&#x2F;&#x2F;music.163.com&#x2F;#&#x2F;user&#x2F;home?id&#x3D;12886823"><i class="ic i-cloud-music"></i></span>
+      <span class="exturl item weibo" data-url="aHR0cHM6Ly93ZWliby5jb20vYW1laGltZQ==" title="https:&#x2F;&#x2F;weibo.com&#x2F;amehime"><i class="ic i-weibo"></i></span>
+      <span class="exturl item about" data-url="aHR0cHM6Ly9hYm91dC5tZS9hbWVoaW1l" title="https:&#x2F;&#x2F;about.me&#x2F;amehime"><i class="ic i-address-card"></i></span>
+</div>
+
+<ul class="menu">
+  
+    
+  <li class="item">
+    <a href="/" rel="section"><i class="ic i-home"></i>Home</a>
+  </li>
+
+        
+  <li class="item dropdown">
+      <a href="javascript:void(0);"><i class="ic i-feather"></i>Posts</a>
+    <ul class="submenu">
+
+        
+  <li class="item">
+    <a href="/archives/" rel="section"><i class="ic i-list-alt"></i>Archives</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/categories/" rel="section"><i class="ic i-th"></i>Categories</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/tags/" rel="section"><i class="ic i-tags"></i>Tags</a>
+  </li>
+
+  </ul>
+    
+  <li class="item">
+    <a href="/friends/" rel="section"><i class="ic i-heart"></i>Friends</a>
+  </li>
+
+
+</ul>
+
+      </div>
+    </div>
+  </div>
+
+  <ul id="quick">
+    <li class="prev pjax">
+        <a href="/2017/06/11/%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/" rel="prev" title="Previous Post"><i class="ic i-chevron-left"></i></a>
+    </li>
+    <li class="up"><i class="ic i-arrow-up"></i></li>
+    <li class="down"><i class="ic i-arrow-down"></i></li>
+    <li class="next pjax">
+        <a href="/2017/07/10/OpenGL-ES2-0%E4%B8%AD%E7%9A%84%E5%85%89%E7%85%A7/" rel="next" title="Next Post"><i class="ic i-chevron-right"></i></a>
+    </li>
+    <li class="percent"></li>
+  </ul>
+</div>
+
+
+        </div>
+        <div class="dimmer"></div>
+      </div>
+    </main>
+    <footer id="footer">
+      <div class="inner">
+        <div class="widgets">
+          
+<div class="rpost pjax">
+  <h2>Random Posts</h2>
+  <ul>
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2017/07/10/OpenGL-ES2-0%E4%B8%AD%E7%9A%84%E5%85%89%E7%85%A7/" title="OpenGL ES2.0中的光照">OpenGL ES2.0中的光照</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/05/25/Android-SharedPreference%E8%A7%A3%E6%9E%90/" title="Android SharedPreference解析">Android SharedPreference解析</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/04/02/%E6%A0%91/" title="树">树</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/06/20/Android-%E7%9B%B8%E6%9C%BA%E5%AD%90%E7%B3%BB%E7%BB%9F/" title="Android 相机子系统">Android 相机子系统</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/04/23/%E6%95%B0%E5%AD%97%E7%9A%84%E7%BF%BB%E8%BD%AC/" title="数字的翻转">数字的翻转</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2017/07/12/OpenGL-ES2-0%E4%B8%AD%E7%9A%84%E7%BA%B9%E7%90%86/" title="OpenGL ES2.0中的纹理">OpenGL ES2.0中的纹理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2018/06/10/HLS%E7%9F%A5%E8%AF%86%E7%82%B9/" title="HLS知识点">HLS知识点</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2017/06/25/Android-Matrix%E7%9A%84%E4%BD%BF%E7%94%A8/" title="Android Matrix的使用">Android Matrix的使用</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2023/04/25/Mac-M2%E6%9C%BA%E5%9E%8B%E5%BC%80%E5%8F%91%E9%97%AE%E9%A2%98/" title="Mac M2机型开发问题">Mac M2机型开发问题</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2019/03/28/LeetCode-17/" title="LeetCode 17">LeetCode 17</a></span>
+  </li>
+
+  </ul>
+</div>
+<div>
+  <h2>Recent Comments</h2>
+  <ul class="leancloud-recent-comment"></ul>
+</div>
+
+        </div>
+        <div class="status">
+  <div class="copyright">
+    
+    &copy; 2010 – 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="ic i-sakura rotate"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Luffy Xu @ Hanasaku</span>
+  </div>
+  <div class="count">
+    <span class="post-meta-item-icon">
+      <i class="ic i-chart-area"></i>
+    </span>
+    <span title="Symbols count total">76k words</span>
+
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="ic i-coffee"></i>
+    </span>
+    <span title="Reading time total">1:09</span>
+  </div>
+  <div class="powered-by">
+    Powered by <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span>
+  </div>
+</div>
+
+      </div>
+    </footer>
+  </div>
+<script data-config type="text/javascript">
+  var LOCAL = {
+    path: '2017/06/25/Android-Matrix的使用/',
+    favicon: {
+      show: "（●´3｀●）Goooood",
+      hide: "(´Д｀)Booooom"
+    },
+    search : {
+      placeholder: "Search for Posts",
+      empty: "We didn't find any results for the search: ${query}",
+      stats: "${hits} results found in ${time} ms"
+    },
+    valine: true,fancybox: true,
+    copyright: 'Copied to clipboard successfully! <br> All articles in this blog are licensed under <i class="ic i-creative-commons"></i>BY-NC-SA.',
+    ignores : [
+      function(uri) {
+        return uri.includes('#');
+      },
+      function(uri) {
+        return new RegExp(LOCAL.path+"$").test(uri);
+      }
+    ]
+  };
+</script>
+
+<script src="https://cdn.polyfill.io/v2/polyfill.js"></script>
+
+<script src="//cdn.jsdelivr.net/combine/npm/pace-js@1.0.2/pace.min.js,npm/pjax@0.2.8/pjax.min.js,npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js,npm/animejs@3.2.0/lib/anime.min.js,npm/algoliasearch@4/dist/algoliasearch-lite.umd.js,npm/instantsearch.js@4/dist/instantsearch.production.min.js,npm/lozad@1/dist/lozad.min.js,npm/quicklink@2/dist/quicklink.umd.js"></script>
+
+<script src="/js/app.js?v=0.2.5"></script>
+
+
+
+
+</body>
+</html>

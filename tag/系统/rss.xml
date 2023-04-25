@@ -1,0 +1,81 @@
+<?xml version="1.0"?>
+<rss version="2.0">
+    <channel>
+        <title>花咲く • Posts by &#34;系统&#34; tag</title>
+        <link>http://example.com</link>
+        <description>编程笔记 &amp; 学渣的自救</description>
+        <language>cn</language>
+        <pubDate>Wed, 30 Mar 2022 00:12:13 +0800</pubDate>
+        <lastBuildDate>Wed, 30 Mar 2022 00:12:13 +0800</lastBuildDate>
+        <category>Android</category>
+        <category>图像处理</category>
+        <category>C++</category>
+        <category>蓝牙</category>
+        <category>系统</category>
+        <category>Camera</category>
+        <category>Cmake</category>
+        <category>音视频</category>
+        <category>FFmpeg</category>
+        <category>多媒体</category>
+        <category>ExoPlayer</category>
+        <category>流媒体协议</category>
+        <category>HLS</category>
+        <category>算法</category>
+        <category>LeetCode</category>
+        <category>开发</category>
+        <category>Mac</category>
+        <category>OpenGL ES</category>
+        <category>OpenGL ES2.0</category>
+        <category>OpenGL ES3.0</category>
+        <category>OpenSLES</category>
+        <category>插件化</category>
+        <category>Dalvik虚拟机</category>
+        <category>leetcode</category>
+        <category>ffmpeg</category>
+        <category>日语</category>
+        <category>歌词</category>
+        <category>排序算法</category>
+        <category>二叉树</category>
+        <category>Algorithm</category>
+        <category>数据结构</category>
+        <category>树</category>
+        <category>BFS</category>
+        <item>
+            <guid isPermalink="true">http://example.com/2022/03/30/Android%E7%B3%BB%E7%BB%9F%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/</guid>
+            <title>Android系统启动流程</title>
+            <link>http://example.com/2022/03/30/Android%E7%B3%BB%E7%BB%9F%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/</link>
+            <category>Android</category>
+            <category>系统</category>
+            <pubDate>Wed, 30 Mar 2022 00:12:13 +0800</pubDate>
+            <description><![CDATA[ &lt;p&gt;Android 启动分 5 个阶段：&lt;/p&gt;
+&lt;h2 id=&#34;bootloader&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#bootloader&#34;&gt;#&lt;/a&gt; BootLoader&lt;/h2&gt;
+&lt;p&gt;上电后引导芯片从指定位置加载 bootloader 程序，初始化 ram，&lt;br /&gt;
+然后启动 linux 内核&lt;/p&gt;
+&lt;h2 id=&#34;linux内核&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#linux内核&#34;&gt;#&lt;/a&gt; Linux 内核&lt;/h2&gt;
+&lt;p&gt;启动 linux 内核后，会初始化内存管理单元和缓存，进程管理。&lt;br /&gt;
+加载驱动：Display Driver，Camera Driver, Input，Binder Driver 等。&lt;br /&gt;
+最后启动 init 进程&lt;/p&gt;
+&lt;h2 id=&#34;init进程&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#init进程&#34;&gt;#&lt;/a&gt; init 进程&lt;/h2&gt;
+&lt;p&gt;linux 内核启动中创建，是内核创建的第一个用户进程，pid 为 1，执行分两个阶段，分别在从内核态和用户态执行。&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;第一阶段，设置环境变量，创建挂载文件系统，设置 selinux，&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;第二阶段，初始化启动属性服务，解析 init.rc 文件，启动 ServiceManager, 然后启动 Zygote 进程，最后自身进入一个无限循环等待事件处理。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;zygote&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#zygote&#34;&gt;#&lt;/a&gt; Zygote&lt;/h2&gt;
+&lt;p&gt;创建 Java 虚拟机（Dalvik/ART）&lt;br /&gt;
+注册 JNI 函数&lt;br /&gt;
+通过 JNI 调用到 zygoteInit.java 类中的 main 方法，第一次进入 Java 世界。&lt;br /&gt;
+创建一个 Socket 并监听来自 AMS 的 fork 请求&lt;br /&gt;
+启动 system_server 进程&lt;/p&gt;
+&lt;h2 id=&#34;system_server&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#system_server&#34;&gt;#&lt;/a&gt; system_server&lt;/h2&gt;
+&lt;p&gt;启动 binder 线程池&lt;br /&gt;
+创建 SystemServiceManager 负责创建其他系统服务&lt;br /&gt;
+创建 AMS,WMS,PWS,IMS 等系统服务&lt;/p&gt;
+ ]]></description>
+        </item>
+    </channel>
+</rss>

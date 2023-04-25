@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>http://example.com</id>
+    <title>花咲く • Posts by &#34;camera&#34; tag</title>
+    <link href="http://example.com" />
+    <updated>2022-06-20T15:42:47.000Z</updated>
+    <category term="Android" />
+    <category term="图像处理" />
+    <category term="C++" />
+    <category term="蓝牙" />
+    <category term="系统" />
+    <category term="Camera" />
+    <category term="Cmake" />
+    <category term="音视频" />
+    <category term="FFmpeg" />
+    <category term="多媒体" />
+    <category term="ExoPlayer" />
+    <category term="流媒体协议" />
+    <category term="HLS" />
+    <category term="算法" />
+    <category term="LeetCode" />
+    <category term="开发" />
+    <category term="Mac" />
+    <category term="OpenGL ES" />
+    <category term="OpenGL ES2.0" />
+    <category term="OpenGL ES3.0" />
+    <category term="OpenSLES" />
+    <category term="插件化" />
+    <category term="Dalvik虚拟机" />
+    <category term="leetcode" />
+    <category term="ffmpeg" />
+    <category term="日语" />
+    <category term="歌词" />
+    <category term="排序算法" />
+    <category term="二叉树" />
+    <category term="Algorithm" />
+    <category term="数据结构" />
+    <category term="树" />
+    <category term="BFS" />
+    <entry>
+        <id>http://example.com/2022/06/20/Android-%E7%9B%B8%E6%9C%BA%E5%AD%90%E7%B3%BB%E7%BB%9F/</id>
+        <title>Android 相机子系统</title>
+        <link rel="alternate" href="http://example.com/2022/06/20/Android-%E7%9B%B8%E6%9C%BA%E5%AD%90%E7%B3%BB%E7%BB%9F/"/>
+        <content type="html">&lt;p&gt;Android Camera 架构&lt;/p&gt;
+&lt;p&gt;&lt;img data-src=&#34;http://tva3.sinaimg.cn/large/b5348f57gy1h3f5lczmiuj20kt0gkgqt.jpg&#34; alt=&#34;相机系统&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;第一层： Java  APP&lt;br /&gt;
+ 第二层： Framework 封装 java 层的调用；实现 native 层的 CameraService&lt;br /&gt;
+ 第三层： Camera HAL google 实现的 HIDL 标准接口，同时芯片厂商和 OEM 厂商基于 HIDL 接口实现自己的功能&lt;br /&gt;
+第四层： Driver 相机驱动层&lt;br /&gt;
+第五层： 各种电子、感光元件以及相机依赖的硬件&lt;/p&gt;
+&lt;p&gt;类：&lt;/p&gt;
+&lt;p&gt;CameraServiceClient&lt;/p&gt;
+&lt;p&gt;CameraDevice  CameraProviderManager&lt;/p&gt;
+&lt;p&gt;Camera3Device&lt;/p&gt;
+&lt;p&gt;CameraHAL&lt;/p&gt;
+&lt;h2 id=&#34;数据&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#数据&#34;&gt;#&lt;/a&gt; 数据&lt;/h2&gt;
+&lt;h3 id=&#34;camerametadata&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#camerametadata&#34;&gt;#&lt;/a&gt; CameraMetaData&lt;/h3&gt;
+&lt;p&gt;以 key-value 的形式存储数据&lt;br /&gt;
+ Camera 系统中流转的三种主要数据都是继承了 CameraMetaData&lt;/p&gt;
+&lt;h3 id=&#34;capturechractoristics-静态数据&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#capturechractoristics-静态数据&#34;&gt;#&lt;/a&gt; CaptureChractoristics  静态数据&lt;/h3&gt;
+&lt;p&gt;相机静态配置数据：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;输入流配置&lt;/li&gt;
+&lt;li&gt;输出流配置&lt;/li&gt;
+&lt;li&gt;高分辨率配置&lt;/li&gt;
+&lt;li&gt;高帧率配置&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;capturerequest-拍摄请求&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#capturerequest-拍摄请求&#34;&gt;#&lt;/a&gt; CaptureRequest  拍摄请求&lt;/h3&gt;
+&lt;p&gt;有 2 种类型的请求：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;capture   非重复请求&lt;/li&gt;
+&lt;li&gt;repeating   重复请求   例如：实现预览的请求可以用 repeating 请求实现&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;CameraCaptureSession 管理相机连接的会话&lt;/p&gt;
+&lt;p&gt;CameraCaptureSession 由 createCameraSession 方法创建&lt;/p&gt;
+&lt;h3 id=&#34;captureresult-拍摄结果&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#captureresult-拍摄结果&#34;&gt;#&lt;/a&gt; CaptureResult  拍摄结果&lt;/h3&gt;
+&lt;h2 id=&#34;数据流向&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#数据流向&#34;&gt;#&lt;/a&gt; 数据流向&lt;/h2&gt;
+&lt;p&gt;CameraDevice   CameraCaptureSession    CameraManager.AvailabilityCallback&lt;/p&gt;
+</content>
+        <category term="Android" />
+        <category term="Camera" />
+        <updated>2022-06-20T15:42:47.000Z</updated>
+    </entry>
+</feed>

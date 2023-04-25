@@ -1,0 +1,588 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#FFF">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+<link rel="alternate" type="application/rss+xml" title="花咲く" href="http://example.com/rss.xml" />
+<link rel="alternate" type="application/atom+xml" title="花咲く" href="http://example.com/atom.xml" />
+<link rel="alternate" type="application/json" title="花咲く" href="http://example.com/feed.json" />
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Mulish:300,300italic,400,400italic,700,700italic%7CFredericka%20the%20Great:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20JP:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20SC:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="/css/app.css?v=0.2.5">
+
+  
+  <meta name="keywords" content="图像处理,OpenGL ES,OpenGL ES2.0" />
+
+
+<link rel="canonical" href="http://example.com/2017/07/10/OpenGL-ES2-0%E4%B8%AD%E7%9A%84%E5%85%89%E7%85%A7/">
+
+
+
+  <title>
+OpenGL ES2.0中的光照 |
+Hanasaku = 花咲く = blog</title>
+<meta name="generator" content="Hexo 6.1.0"></head>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div id="loading">
+    <div class="cat">
+      <div class="body"></div>
+      <div class="head">
+        <div class="face"></div>
+      </div>
+      <div class="foot">
+        <div class="tummy-end"></div>
+        <div class="bottom"></div>
+        <div class="legs left"></div>
+        <div class="legs right"></div>
+      </div>
+      <div class="paw">
+        <div class="hands left"></div>
+        <div class="hands right"></div>
+      </div>
+    </div>
+  </div>
+  <div id="container">
+    <header id="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="inner">
+        <div id="brand">
+          <div class="pjax">
+          
+  <h1 itemprop="name headline">OpenGL ES2.0中的光照
+  </h1>
+  
+<div class="meta">
+  <span class="item" title="Created: 2017-07-10 20:53:21">
+    <span class="icon">
+      <i class="ic i-calendar"></i>
+    </span>
+    <span class="text">Posted on</span>
+    <time itemprop="dateCreated datePublished" datetime="2017-07-10T20:53:21+08:00">2017-07-10</time>
+  </span>
+  <span class="item" title="Symbols count in article">
+    <span class="icon">
+      <i class="ic i-pen"></i>
+    </span>
+    <span class="text">Symbols count in article</span>
+    <span>5.2k</span>
+    <span class="text">words</span>
+  </span>
+  <span class="item" title="Reading time">
+    <span class="icon">
+      <i class="ic i-clock"></i>
+    </span>
+    <span class="text">Reading time</span>
+    <span>5 mins.</span>
+  </span>
+</div>
+
+
+          </div>
+        </div>
+        <nav id="nav">
+  <div class="inner">
+    <div class="toggle">
+      <div class="lines" aria-label="Toggle navigation bar">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </div>
+    <ul class="menu">
+      <li class="item title"><a href="/" rel="start">Hanasaku</a></li>
+    </ul>
+    <ul class="right">
+      <li class="item theme">
+        <i class="ic i-sun"></i>
+      </li>
+      <li class="item search">
+        <i class="ic i-search"></i>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+      </div>
+      <div id="imgs" class="pjax">
+        <ul>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gicm0n457cj20zk0m8e81.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1giciryrr3rj20zk0m8nhk.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1giciuv0socj20zk0m8qes.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gipevuctzzj20zk0m84qp.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1giclj61ylzj20zk0m8b29.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gipesrnqv3j20zk0m8ava.jpg"></li>
+        </ul>
+      </div>
+    </header>
+    <div id="waves">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" />
+          <use xlink:href="#gentle-wave" x="48" y="3" />
+          <use xlink:href="#gentle-wave" x="48" y="5" />
+          <use xlink:href="#gentle-wave" x="48" y="7" />
+        </g>
+      </svg>
+    </div>
+    <main>
+      <div class="inner">
+        <div id="main" class="pjax">
+          
+  <div class="article wrap">
+    
+<div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<i class="ic i-home"></i>
+<span><a href="/">Home</a></span>
+</div>
+
+    <article itemscope itemtype="http://schema.org/Article" class="post block" lang="cn">
+  <link itemprop="mainEntityOfPage" href="http://example.com/2017/07/10/OpenGL-ES2-0%E4%B8%AD%E7%9A%84%E5%85%89%E7%85%A7/">
+
+  <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="image" content="/images/avatar.png">
+    <meta itemprop="name" content="Luffy Xu">
+    <meta itemprop="description" content="blog, 编程笔记 & 学渣的自救">
+  </span>
+
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="花咲く">
+  </span>
+
+  <div class="body md" itemprop="articleBody">
+    
+
+    <h1 id="opengles20中的光照"><a class="anchor" href="#opengles20中的光照">#</a> OpenGLES2.0 中的光照</h1>
+<p>翻译自<span class="exturl" data-url="aHR0cDovL3d3dy5sZWFybm9wZW5nbGVzLmNvbS9hbmRyb2lkLWxlc3Nvbi10d28tYW1iaWVudC1hbmQtZGlmZnVzZS1saWdodGluZy8="> Android 课程二：环境光和漫反射光</span></p>
+<h2 id="1什么是光"><a class="anchor" href="#1什么是光">#</a> 1. 什么是光？</h2>
+<p>世界没有光就会什么也看不到，我们将无法感知这个世界活着物体。</p>
+<p>在真实的世界里，光是由无数的光子聚合在一起形成的，它从一个光源出发，经过无数时间，最后传递到了我们的眼睛里</p>
+<p>我们应该如何用计算机图像模拟光呢，现在有 2 种热门技术可以实现：光线跟踪和栅格化。光线跟踪通过数学计算跟踪真实的光线，能给出十分准确和真实的结果，但是不足之处是模拟所有的光线十分消耗计算资源，并且实时渲染速度很慢。由于这个限制，大多数的实时计算机图像使用的是栅格化技术，通过接近结果模拟光线。</p>
+<h2 id="2光线的分类"><a class="anchor" href="#2光线的分类">#</a> 2. 光线的分类</h2>
+<p>我们可以抽象出光工作的方式形成三种基本的光线类型</p>
+<ul>
+<li>环境光</li>
+</ul>
+<p>环境光是一种基础的光线，它遍布整个场景，它没有表现出来自任何其他的光源，因为它在到达你之前经过了无数的反射。这种光能阴天的户外，或是许多不同光源累积影响的室内。没有分别计算所有独立的光，我们可以为对象或场景设置一个基本的光照等级。</p>
+<ul>
+<li>漫反射光</li>
+</ul>
+<p>这种光在到达教你的眼睛里经过了物体之间反射。物体的光照等级随它与光线的角度不同而变化。直面它的时候更加明亮。同样我们感知物体时无论我们相对物体的位置在哪里，亮点都是相同的。这种现象也叫兰伯特余弦定律（Lambert's cosine law），漫反射和兰伯特反射在生活中是很常见的。</p>
+<ul>
+<li>高光</li>
+</ul>
+<p>和漫反射不同，高光随我们和物体的位置不同而不同，它让物体发亮和更加光滑</p>
+<h2 id="2模拟光"><a class="anchor" href="#2模拟光">#</a> 2. 模拟光</h2>
+<p>与在 3D 场景中的光有 3 种一样，光源也有 3 种：直接光源、Point lighting、Spot lighting。</p>
+<h3 id="1数学"><a class="anchor" href="#1数学">#</a> 1. 数学</h3>
+<p>学习来自一个点光源的环境光和漫反射光</p>
+<h4 id="环境光"><a class="anchor" href="#环境光">#</a> 环境光</h4>
+<p>环境光其实是漫反射光的一种，但是它也能被看作是充满整个场景的低级光。这样想的话，它会很容易计算</p>
+<p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">final color = material color * ambient light color</span><br></pre></td></tr></table></figure><br />
+ 例如，有个物体是红色的，我们的环境光是灰白的。让我们假定将颜色存储为有 3 个颜色的数组红、绿、蓝，使用 RGB 颜色模型：</p>
+<p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">final color = &#123; 1 , 0 , 0 &#125; * &#123; 0.1 , 0.1 , 0.1 &#125; = &#123; 0.1 , 0.0 , 0.0 &#125;</span><br></pre></td></tr></table></figure></p>
+<p>最终物体的颜色会是淡红色。基础的场景光就是这样的，除非你想要更加高级的视觉技术</p>
+<h4 id="漫反射光-点光源"><a class="anchor" href="#漫反射光-点光源">#</a> 漫反射光 - 点光源</h4>
+<p>对漫反射光，我们需要增加衰减和光的位置。光的位置会用来计算光和表面的角度，它会影响表面的光照的整个等级。它还用来计算光和表面的距离，并决定了那个点的光照强度。</p>
+<p><em>步骤一： 计算兰伯特因子</em></p>
+<p>我们需要的第一个主要的计算是计算出表明和光的角度。直面光线的表层会处于光照的最大强度。计算出这个属性的合适的方式是使用兰伯特余弦定理。如果我们有 2 个向量，一个是从光线到表面的一个点，第二个是曲面法线，我们可以计算出余弦值：先将各个向量归一化，因此有它们的长度为 1，然后计算出 2 个向量的点积。这个操作能通过 OpenGL ES 的两个着色器轻松完成。</p>
+<p>我们声明 lambert 因子，它的范围是 0 到 1</p>
+<ol>
+<li></li>
+</ol>
+<p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">light vector = light position - obejct position</span><br><span class="line">cosine = dot product(object normal,normalize(light vector))</span><br><span class="line">lambert factor = max(cosine,0)</span><br></pre></td></tr></table></figure><br />
+ 首先我们通过对象位置减去光线位置计算出光线的向量，然后我们获取物体的法线和光线向量的点积，就得到了这个余弦了。归一化光线向量的意思就是改变它的长度为 1。因为点积德范围是 - 1 到 1，我们把它固定到（0，1）。</p>
+<p>这是一个例子：有个光滑的平面，表面的法线笔直的指向天。光线的位置为「0，10，-10」，或是向上 10 个单位，向前 10 个单位，我们要计算出原地的光</p>
+<p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">light vector = &#123; 0, 10, -10&#125; - &#123;0, 0, 0&#125; = &#123;0, 10, -10&#125;</span><br><span class="line">obejct normal = &#123;0, 1, 0&#125;</span><br></pre></td></tr></table></figure><br />
+ 用平白的语言来说，如果我们沿着光线向量出发移动，到达光线的位置。要归一化这个向量，我们让向量的每一个标量处以向量的长度：</p>
+<p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">light vector length = square root( 0*0 + 10*10 + -10*-10) = square root(200) = 14.14</span><br><span class="line">normalized light vector = &#123;0/14.14, 10/14.14, -10/14.14&#125; = &#123;0, 0.707, -0.707&#125;</span><br></pre></td></tr></table></figure><br />
+ 然后我们计算点积</p>
+<p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">dot product(&#123;0,1,0&#125;,&#123;0,0.707, -0.707&#125;) = 0*0 + 1*0.707 + 0*-0.707 = 0.707</span><br><span class="line">lambert factor = max(0.707,0) = 0.707</span><br></pre></td></tr></table></figure></p>
+<p>OpenGL ES 2 的着色器语言已经内置了一些这种函数，所以我们不需要手动做所有的数学，但是这对我们的理解仍然有帮助。</p>
+<p><em>步骤二：计算衰减因子</em></p>
+<p>接着，我们需要计算衰减，真实的点光源的光线衰减遵从<span class="exturl" data-url="aHR0cDovL2JhaWtlLmJhaWR1LmNvbS9saW5rP3VybD1fa2RXcG5oNXJJVnZ0Y0tlQU1wZGRsWkdKUDJlNjVCM2V2cGQ4QS1mVFA0UFpqTG9RN09PdHpqQXJURHpWdmVMUEt2UllvaUxnQjJZSXdyTmswVVp3V3FQbHVsdnF4VjdKcjF0dXltZ3Y0eDhKS21hSVJpbGhKc0dxN1JuMmRFOHRHOHY3bFFtTnQ1aGVFRXExdDhrRUs=">平方反比定律</span>，它可以表述为：<br />
+ <code>luminosity = 1 / (distance* distance)</code> <br />
+ 回到我们的例子，我们知道了一个距离为 14.14，所以最后我们的亮度看起来是：<br />
+ <code>luminosity = 1/ (14.14*14.14) = 0.005</code> <br />
+ 你可以看到，平方反比定律在距离上会导致剧烈的衰减。这就是光在真实世界中从点光源出发是怎么回事，但是我们的图像显示有限制范围，因此抑制衰减因子，我们能得到更加真实的光照而不会使物体看起来太暗了。</p>
+<p><em>步骤三：计算最后的颜色</em></p>
+<p>现在我们同时有了余弦和衰减因子，我们能计算出最终的光照等级：</p>
+<p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">final color = meterial color * (light color * lambert factor * luminosity)</span><br></pre></td></tr></table></figure></p>
+<p>回到之前一个例子，我们有红色的材料和全白的光源，最终的计算：</p>
+<p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">final color = &#123;1, 0, 0&#125; *(&#123;1,1,1&#125;*0.707*0.005) </span><br><span class="line">= &#123;1,0,0&#125;*&#123;0.0035,0.0035,0.0035&#125; </span><br><span class="line">= &#123;0.0035,0,0&#125;</span><br></pre></td></tr></table></figure></p>
+<p>简单的总结一下，对漫反射光我们需要使用表面和光线的角度，还有表面和光线的距离来最终计算出整个漫反射照明等级。下面是步骤：</p>
+<p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">//one</span><br><span class="line">light vector = light position - object position</span><br><span class="line">cosine = dot product(object normal,normalize(light vector))</span><br><span class="line">lambert factor = max(cosine,0)</span><br><span class="line"></span><br><span class="line">//two</span><br><span class="line">luminosity = 1/(distance*distance)</span><br><span class="line"></span><br><span class="line">//three</span><br><span class="line">final color = material color * (light color*lambert factor * luminosity)</span><br></pre></td></tr></table></figure></p>
+<h4 id="顶点着色器"><a class="anchor" href="#顶点着色器">#</a> 顶点着色器</h4>
+<p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">final String vertexShader =</span><br><span class="line">    &quot;uniform mat4 u_MVPMatrix;      \n&quot;     // 一个表示进行了Model变换、View变换、投影变换的矩阵</span><br><span class="line">  + &quot;uniform mat4 u_MVMatrix;       \n&quot;     // 一个表示进行了Model变换和View变换的矩阵</span><br><span class="line">  + &quot;uniform vec3 u_LightPos;       \n&quot;     // 在眼坐标系中光的位置</span><br><span class="line"> </span><br><span class="line">  + &quot;attribute vec4 a_Position;     \n&quot;     // 传入的顶点位置信息</span><br><span class="line">  + &quot;attribute vec4 a_Color;        \n&quot;     // 传人的每个顶点的颜色信息</span><br><span class="line">  + &quot;attribute vec3 a_Normal;       \n&quot;     // 每个顶点的法线信息</span><br><span class="line"> </span><br><span class="line">  + &quot;varying vec4 v_Color;          \n&quot;     // 颜色信息，这个变量会传递进片段着色器中</span><br><span class="line"> </span><br><span class="line">  + &quot;void main()                    \n&quot;     </span><br><span class="line">  + &quot;&#123;                              \n&quot;</span><br><span class="line">// 将顶点转化为眼坐标系</span><br><span class="line">  + &quot;   vec3 modelViewVertex = vec3(u_MVMatrix * a_Position);              \n&quot;</span><br><span class="line">// 将法线方向转移进眼坐标系</span><br><span class="line">  + &quot;   vec3 modelViewNormal = vec3(u_MVMatrix * vec4(a_Normal, 0.0));     \n&quot;</span><br><span class="line">// 计算出顶点和光线的距离  </span><br><span class="line">  + &quot;   float distance = length(u_LightPos - modelViewVertex);             \n&quot;</span><br><span class="line">// 获取从光线处到顶点的光线向量</span><br><span class="line">  + &quot;   vec3 lightVector = normalize(u_LightPos - modelViewVertex);        \n&quot;</span><br><span class="line">// 计算lambert factor，也就是计算光线向量和顶点法线的点积. 如果法线向量和光线向量指向同一个方向，则会得出最大的光照强度.</span><br><span class="line">  + &quot;   float lambert = max(dot(modelViewNormal, lightVector), 0.1);       \n&quot;</span><br><span class="line">// 光线随距离的衰减</span><br><span class="line">  + &quot;   float diffuse = lambert * (1.0 / (1.0 + (0.25 * distance * distance)));  \n&quot;</span><br><span class="line">// 将颜色乘以衰减度， It will be interpolated across the triangle.</span><br><span class="line">  + &quot;   v_Color = a_Color * diffuse;                                       \n&quot;</span><br><span class="line">// gl_Position 存储最终的位置.</span><br><span class="line">// 将这个向量乘以变换矩阵得到在归一屏幕坐标系中的点</span><br><span class="line">  + &quot;   gl_Position = u_MVPMatrix * a_Position;                            \n&quot;</span><br><span class="line">  + &quot;&#125;                                                                     \n&quot;;</span><br></pre></td></tr></table></figure></p>
+<h4 id="片段着色器"><a class="anchor" href="#片段着色器">#</a> 片段着色器</h4>
+<p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">final String fragmentShader =</span><br><span class="line">  &quot;precision mediump float;       \n&quot;     // Set the default precision to medium. We don&#x27;t need as high of a</span><br><span class="line">                                          // precision in the fragment shader.</span><br><span class="line">+ &quot;varying vec4 v_Color;          \n&quot;     // This is the color from the vertex shader interpolated across the</span><br><span class="line">                                          // triangle per fragment.</span><br><span class="line">+ &quot;void main()                    \n&quot;     // The entry point for our fragment shader.</span><br><span class="line">+ &quot;&#123;                              \n&quot;</span><br><span class="line">+ &quot;   gl_FragColor = v_Color;     \n&quot;     // Pass the color directly through the pipeline.</span><br><span class="line">+ &quot;&#125;                              \n&quot;;</span><br></pre></td></tr></table></figure></p>
+<h4 id="光源的顶点-片段着色器"><a class="anchor" href="#光源的顶点-片段着色器">#</a> 光源的顶点、片段着色器</h4>
+<p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">// Define a simple shader program for our point.</span><br><span class="line">final String pointVertexShader =</span><br><span class="line">    &quot;uniform mat4 u_MVPMatrix;      \n&quot;</span><br><span class="line">  + &quot;attribute vec4 a_Position;     \n&quot;</span><br><span class="line">  + &quot;void main()                    \n&quot;</span><br><span class="line">  + &quot;&#123;                              \n&quot;</span><br><span class="line">  + &quot;   gl_Position = u_MVPMatrix   \n&quot;</span><br><span class="line">  + &quot;               * a_Position;   \n&quot;</span><br><span class="line">  + &quot;   gl_PointSize = 5.0;         \n&quot;</span><br><span class="line">  + &quot;&#125;                              \n&quot;;</span><br><span class="line"> </span><br><span class="line">final String pointFragmentShader =</span><br><span class="line">    &quot;precision mediump float;       \n&quot;</span><br><span class="line">  + &quot;void main()                    \n&quot;</span><br><span class="line">  + &quot;&#123;                              \n&quot;</span><br><span class="line">  + &quot;   gl_FragColor = vec4(1.0,    \n&quot; //直接指定片段颜色为白色</span><br><span class="line">  + &quot;   1.0, 1.0, 1.0);             \n&quot;</span><br><span class="line">  + &quot;&#125;                              \n&quot;;</span><br></pre></td></tr></table></figure></p>
+<p>有一个新的属性叫 <code>gl_PointSize</code>  是点在空间中的大小为多少个像素。</p>
+
+      <div class="tags">
+          <a href="/tags/%E5%9B%BE%E5%83%8F%E5%A4%84%E7%90%86/" rel="tag"><i class="ic i-tag"></i> 图像处理</a>
+          <a href="/tags/OpenGL-ES/" rel="tag"><i class="ic i-tag"></i> OpenGL ES</a>
+          <a href="/tags/OpenGL-ES2-0/" rel="tag"><i class="ic i-tag"></i> OpenGL ES2.0</a>
+      </div>
+  </div>
+
+   <footer>
+
+    <div class="meta">
+  <span class="item">
+    <span class="icon">
+      <i class="ic i-calendar-check"></i>
+    </span>
+    <span class="text">Edited on</span>
+    <time title="Modified: 2023-04-24 21:19:10" itemprop="dateModified" datetime="2023-04-24T21:19:10+08:00">2023-04-24</time>
+  </span>
+  <span id="2017/07/10/OpenGL-ES2-0中的光照/" class="item leancloud_visitors" data-flag-title="OpenGL ES2.0中的光照" title="Views">
+      <span class="icon">
+        <i class="ic i-eye"></i>
+      </span>
+      <span class="text">Views</span>
+      <span class="leancloud-visitors-count"></span>
+      <span class="text">times</span>
+  </span>
+</div>
+
+      
+
+<div id="copyright">
+<ul>
+  <li class="author">
+    <strong>Post author:  </strong>Luffy Xu <i class="ic i-at"><em>@</em></i>花咲く
+  </li>
+  <li class="link">
+    <strong>Post link: </strong>
+    <a href="http://example.com/2017/07/10/OpenGL-ES2-0%E4%B8%AD%E7%9A%84%E5%85%89%E7%85%A7/" title="OpenGL ES2.0中的光照">http://example.com/2017/07/10/OpenGL-ES2-0中的光照/</a>
+  </li>
+  <li class="license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+  </footer>
+
+</article>
+
+  </div>
+  
+
+<div class="post-nav">
+    <div class="item left">
+      
+
+  <a href="/2017/06/25/Android-Matrix%E7%9A%84%E4%BD%BF%E7%94%A8/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva2.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1giclh5u05ej20zk0m87df.jpg" title="Android Matrix的使用">
+  <span class="type">Previous Post</span>
+  <span class="category"><i class="ic i-flag"></i> </span>
+  <h3>Android Matrix的使用</h3>
+  </a>
+
+    </div>
+    <div class="item right">
+      
+
+  <a href="/2017/07/10/OpenGL-ES2-0%E4%B8%AD%E7%9A%84%E5%9D%90%E6%A0%87%E5%8F%98%E6%8D%A2/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tva2.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gicit31ffoj20zk0m8naf.jpg" title="OpenGL ES2.0中的坐标变换">
+  <span class="type">Next Post</span>
+  <span class="category"><i class="ic i-flag"></i> </span>
+  <h3>OpenGL ES2.0中的坐标变换</h3>
+  </a>
+
+    </div>
+</div>
+
+  
+  <div class="wrap" id="comments"></div>
+
+
+        </div>
+        <div id="sidebar">
+          
+
+<div class="inner">
+
+  <div class="panels">
+    <div class="inner">
+      <div class="contents panel pjax" data-title="Contents">
+          <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#opengles20%E4%B8%AD%E7%9A%84%E5%85%89%E7%85%A7"><span class="toc-number">1.</span> <span class="toc-text"> OpenGLES2.0 中的光照</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1%E4%BB%80%E4%B9%88%E6%98%AF%E5%85%89"><span class="toc-number">1.1.</span> <span class="toc-text"> 1. 什么是光？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E5%85%89%E7%BA%BF%E7%9A%84%E5%88%86%E7%B1%BB"><span class="toc-number">1.2.</span> <span class="toc-text"> 2. 光线的分类</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2%E6%A8%A1%E6%8B%9F%E5%85%89"><span class="toc-number">1.3.</span> <span class="toc-text"> 2. 模拟光</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%E6%95%B0%E5%AD%A6"><span class="toc-number">1.3.1.</span> <span class="toc-text"> 1. 数学</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E5%85%89"><span class="toc-number">1.3.1.1.</span> <span class="toc-text"> 环境光</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BC%AB%E5%8F%8D%E5%B0%84%E5%85%89-%E7%82%B9%E5%85%89%E6%BA%90"><span class="toc-number">1.3.1.2.</span> <span class="toc-text"> 漫反射光 - 点光源</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A1%B6%E7%82%B9%E7%9D%80%E8%89%B2%E5%99%A8"><span class="toc-number">1.3.1.3.</span> <span class="toc-text"> 顶点着色器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%89%87%E6%AE%B5%E7%9D%80%E8%89%B2%E5%99%A8"><span class="toc-number">1.3.1.4.</span> <span class="toc-text"> 片段着色器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%89%E6%BA%90%E7%9A%84%E9%A1%B6%E7%82%B9-%E7%89%87%E6%AE%B5%E7%9D%80%E8%89%B2%E5%99%A8"><span class="toc-number">1.3.1.5.</span> <span class="toc-text"> 光源的顶点、片段着色器</span></a></li></ol></li></ol></li></ol></li></ol>
+      </div>
+      <div class="related panel pjax" data-title="Related">
+      </div>
+      <div class="overview panel" data-title="Overview">
+        <div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="image" itemprop="image" alt="Luffy Xu"
+      data-src="/images/avatar.png">
+  <p class="name" itemprop="name">Luffy Xu</p>
+  <div class="description" itemprop="description">编程笔记 & 学渣的自救</div>
+</div>
+
+<nav class="state">
+    <div class="item posts">
+      <a href="/archives/">
+        <span class="count">31</span>
+        <span class="name">posts</span>
+      </a>
+    </div>
+    <div class="item tags">
+      <a href="/tags/">
+        <span class="count">33</span>
+        <span class="name">tags</span>
+      </a>
+    </div>
+</nav>
+
+<div class="social">
+      <span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWU=" title="https:&#x2F;&#x2F;github.com&#x2F;amehime"><i class="ic i-github"></i></span>
+      <span class="exturl item twitter" data-url="aHR0cHM6Ly90d2l0dGVyLmNvbS9hbWVoaW1l" title="https:&#x2F;&#x2F;twitter.com&#x2F;amehime"><i class="ic i-twitter"></i></span>
+      <span class="exturl item zhihu" data-url="aHR0cHM6Ly93d3cuemhpaHUuY29tL3Blb3BsZS9ydXJpc216aw==" title="https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;rurismzk"><i class="ic i-zhihu"></i></span>
+      <span class="exturl item music" data-url="aHR0cHM6Ly9tdXNpYy4xNjMuY29tLyMvdXNlci9ob21lP2lkPTEyODg2ODIz" title="https:&#x2F;&#x2F;music.163.com&#x2F;#&#x2F;user&#x2F;home?id&#x3D;12886823"><i class="ic i-cloud-music"></i></span>
+      <span class="exturl item weibo" data-url="aHR0cHM6Ly93ZWliby5jb20vYW1laGltZQ==" title="https:&#x2F;&#x2F;weibo.com&#x2F;amehime"><i class="ic i-weibo"></i></span>
+      <span class="exturl item about" data-url="aHR0cHM6Ly9hYm91dC5tZS9hbWVoaW1l" title="https:&#x2F;&#x2F;about.me&#x2F;amehime"><i class="ic i-address-card"></i></span>
+</div>
+
+<ul class="menu">
+  
+    
+  <li class="item">
+    <a href="/" rel="section"><i class="ic i-home"></i>Home</a>
+  </li>
+
+        
+  <li class="item dropdown">
+      <a href="javascript:void(0);"><i class="ic i-feather"></i>Posts</a>
+    <ul class="submenu">
+
+        
+  <li class="item">
+    <a href="/archives/" rel="section"><i class="ic i-list-alt"></i>Archives</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/categories/" rel="section"><i class="ic i-th"></i>Categories</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/tags/" rel="section"><i class="ic i-tags"></i>Tags</a>
+  </li>
+
+  </ul>
+    
+  <li class="item">
+    <a href="/friends/" rel="section"><i class="ic i-heart"></i>Friends</a>
+  </li>
+
+
+</ul>
+
+      </div>
+    </div>
+  </div>
+
+  <ul id="quick">
+    <li class="prev pjax">
+        <a href="/2017/06/25/Android-Matrix%E7%9A%84%E4%BD%BF%E7%94%A8/" rel="prev" title="Previous Post"><i class="ic i-chevron-left"></i></a>
+    </li>
+    <li class="up"><i class="ic i-arrow-up"></i></li>
+    <li class="down"><i class="ic i-arrow-down"></i></li>
+    <li class="next pjax">
+        <a href="/2017/07/10/OpenGL-ES2-0%E4%B8%AD%E7%9A%84%E5%9D%90%E6%A0%87%E5%8F%98%E6%8D%A2/" rel="next" title="Next Post"><i class="ic i-chevron-right"></i></a>
+    </li>
+    <li class="percent"></li>
+  </ul>
+</div>
+
+
+        </div>
+        <div class="dimmer"></div>
+      </div>
+    </main>
+    <footer id="footer">
+      <div class="inner">
+        <div class="widgets">
+          
+<div class="rpost pjax">
+  <h2>Random Posts</h2>
+  <ul>
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/05/29/FFmpeg%E4%B9%8B%E9%9F%B3%E8%A7%86%E9%A2%91%E5%90%8C%E6%AD%A5/" title="FFmpeg之音视频同步">FFmpeg之音视频同步</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/05/22/OpenSLES%E7%AE%80%E4%BB%8B/" title="OpenSLES">OpenSLES</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/03/26/ExoPlayer-%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%881%EF%BC%89/" title="ExoPlayer 源码解析（1）">ExoPlayer 源码解析（1）</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/11/30/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%AE%97%E6%B3%95%E6%95%B4%E7%90%86/" title="二叉树算法整理">二叉树算法整理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/03/31/Android-%E8%93%9D%E7%89%99%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B/" title="Android 蓝牙应用开发流程">Android 蓝牙应用开发流程</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2023/04/25/Mac-M2%E6%9C%BA%E5%9E%8B%E5%BC%80%E5%8F%91%E9%97%AE%E9%A2%98/" title="Mac M2机型开发问题">Mac M2机型开发问题</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/04/02/Android-%E6%BA%90%E7%A0%81%E4%B8%AD-C-%E7%9F%A5%E8%AF%86%E7%82%B9/" title="Android 源码中 C++ 知识点">Android 源码中 C++ 知识点</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/04/02/%E4%BA%91%E9%9B%80/" title="云雀">云雀</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/04/07/%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/" title="贪心算法">贪心算法</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/05/11/Cmake%E7%9A%84%E4%BD%BF%E7%94%A8/" title="Cmake的使用">Cmake的使用</a></span>
+  </li>
+
+  </ul>
+</div>
+<div>
+  <h2>Recent Comments</h2>
+  <ul class="leancloud-recent-comment"></ul>
+</div>
+
+        </div>
+        <div class="status">
+  <div class="copyright">
+    
+    &copy; 2010 – 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="ic i-sakura rotate"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Luffy Xu @ Hanasaku</span>
+  </div>
+  <div class="count">
+    <span class="post-meta-item-icon">
+      <i class="ic i-chart-area"></i>
+    </span>
+    <span title="Symbols count total">76k words</span>
+
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="ic i-coffee"></i>
+    </span>
+    <span title="Reading time total">1:09</span>
+  </div>
+  <div class="powered-by">
+    Powered by <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span>
+  </div>
+</div>
+
+      </div>
+    </footer>
+  </div>
+<script data-config type="text/javascript">
+  var LOCAL = {
+    path: '2017/07/10/OpenGL-ES2-0中的光照/',
+    favicon: {
+      show: "（●´3｀●）Goooood",
+      hide: "(´Д｀)Booooom"
+    },
+    search : {
+      placeholder: "Search for Posts",
+      empty: "We didn't find any results for the search: ${query}",
+      stats: "${hits} results found in ${time} ms"
+    },
+    valine: true,fancybox: true,
+    copyright: 'Copied to clipboard successfully! <br> All articles in this blog are licensed under <i class="ic i-creative-commons"></i>BY-NC-SA.',
+    ignores : [
+      function(uri) {
+        return uri.includes('#');
+      },
+      function(uri) {
+        return new RegExp(LOCAL.path+"$").test(uri);
+      }
+    ]
+  };
+</script>
+
+<script src="https://cdn.polyfill.io/v2/polyfill.js"></script>
+
+<script src="//cdn.jsdelivr.net/combine/npm/pace-js@1.0.2/pace.min.js,npm/pjax@0.2.8/pjax.min.js,npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js,npm/animejs@3.2.0/lib/anime.min.js,npm/algoliasearch@4/dist/algoliasearch-lite.umd.js,npm/instantsearch.js@4/dist/instantsearch.production.min.js,npm/lozad@1/dist/lozad.min.js,npm/quicklink@2/dist/quicklink.umd.js"></script>
+
+<script src="/js/app.js?v=0.2.5"></script>
+
+
+
+
+</body>
+</html>

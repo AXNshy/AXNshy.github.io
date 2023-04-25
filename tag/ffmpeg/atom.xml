@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>http://example.com</id>
+    <title>花咲く • Posts by &#34;ffmpeg&#34; tag</title>
+    <link href="http://example.com" />
+    <updated>2022-05-28T16:13:10.000Z</updated>
+    <category term="Android" />
+    <category term="图像处理" />
+    <category term="C++" />
+    <category term="蓝牙" />
+    <category term="系统" />
+    <category term="Camera" />
+    <category term="Cmake" />
+    <category term="音视频" />
+    <category term="FFmpeg" />
+    <category term="多媒体" />
+    <category term="ExoPlayer" />
+    <category term="流媒体协议" />
+    <category term="HLS" />
+    <category term="算法" />
+    <category term="LeetCode" />
+    <category term="开发" />
+    <category term="Mac" />
+    <category term="OpenGL ES" />
+    <category term="OpenGL ES2.0" />
+    <category term="OpenGL ES3.0" />
+    <category term="OpenSLES" />
+    <category term="插件化" />
+    <category term="Dalvik虚拟机" />
+    <category term="leetcode" />
+    <category term="ffmpeg" />
+    <category term="日语" />
+    <category term="歌词" />
+    <category term="排序算法" />
+    <category term="二叉树" />
+    <category term="Algorithm" />
+    <category term="数据结构" />
+    <category term="树" />
+    <category term="BFS" />
+    <entry>
+        <id>http://example.com/2022/05/29/FFmpeg%E4%B9%8B%E9%9F%B3%E8%A7%86%E9%A2%91%E5%90%8C%E6%AD%A5/</id>
+        <title>FFmpeg之音视频同步</title>
+        <link rel="alternate" href="http://example.com/2022/05/29/FFmpeg%E4%B9%8B%E9%9F%B3%E8%A7%86%E9%A2%91%E5%90%8C%E6%AD%A5/"/>
+        <content type="html">&lt;p&gt;音视频同步问题解释之前先需要了解几个基本的音视频的概念：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;pts  渲染时间戳（Presentation TimeStamp）&lt;/li&gt;
+&lt;li&gt;dts 解码时间戳 （Decode TimeStamp）&lt;/li&gt;
+&lt;li&gt;fps 每秒显示的帧数（Frame Per Second）：帧率&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;音频解码&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#音频解码&#34;&gt;#&lt;/a&gt; 音频解码&lt;/h3&gt;
+&lt;p&gt;音频解码是顺序解码，所以音频的 PTS 和 DTS 是一样的，当前解码的帧就是当前需要显示的帧。&lt;/p&gt;
+&lt;h3 id=&#34;视频解码&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#视频解码&#34;&gt;#&lt;/a&gt; 视频解码&lt;/h3&gt;
+&lt;p&gt;在视频解码中，由于采用了双向预测的帧间压缩技术，视频帧的解码顺序和视频帧的显示顺序就不一样了。&lt;br /&gt;
+举个简单的例子：&lt;br /&gt;
+有 1,2,3 这三张顺序显示的图片，第 1 张图片不依赖其他图片进行解码；第二张图片依赖第一张和第三张图片进行解码；第三张图片依赖第一张图片进行解码。&lt;/p&gt;
+&lt;p&gt;如果按照 1-&amp;gt;2-&amp;gt;3 的顺序解码，那么由于 2 需要 1 和 3 进行解码，那么 2 就会解码失败。&lt;br /&gt;
+所以为了成功的对 1,2,3 都进行解码，就应该按照下面的顺序进行解码：1-&amp;gt;3-&amp;gt;2, 这个顺序就是 dts 的顺序。&lt;/p&gt;
+&lt;h3 id=&#34;音视频同步问题&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#音视频同步问题&#34;&gt;#&lt;/a&gt; 音视频同步问题&lt;/h3&gt;
+&lt;h4 id=&#34;1音频播放速度异常&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#1音频播放速度异常&#34;&gt;#&lt;/a&gt; 1. 音频播放速度异常&lt;/h4&gt;
+&lt;p&gt;可能原因：&lt;br /&gt;
+1.1 音频播放器采样率参数设置错误&lt;br /&gt;
+如果设置的采样率大于真实采用率，那么音频播放速度会比正常速度快；如果设置的采样率小于真实采样率，那么音频播放速度会比正常速度慢。&lt;/p&gt;
+&lt;p&gt;1.2 音频解码速度太快，没有做同步，需要根据真实世界时钟速度进行同步解码&lt;/p&gt;
+&lt;h4 id=&#34;2视频播放速度异常&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#2视频播放速度异常&#34;&gt;#&lt;/a&gt; 2. 视频播放速度异常&lt;/h4&gt;
+&lt;p&gt;可能原因：&lt;br /&gt;
+2.1 视频解码速度太快，没有进行音视频同步或者音视频同步出错。&lt;/p&gt;
+&lt;h3 id=&#34;音视频同步策略&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#音视频同步策略&#34;&gt;#&lt;/a&gt; 音视频同步策略&lt;/h3&gt;
+&lt;p&gt;音视频同步策略有三种：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;以视频 pts 为准进行同步&lt;/li&gt;
+&lt;li&gt;以音频 pts 为基准进行同步&lt;/li&gt;
+&lt;li&gt;以真实世界时钟速度进行同步&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;常用第二种和第三种同步策略，为什么不使用第一种，是因为人的感观是对音频信号比视频画面更敏感，如果使用视频 pts 为基准的话，能感觉到明显的音频速度变化，而我们人眼对视频画面的变化是不敏感的，只要渲染的速度达到每秒 60 帧，对人的肉眼就看不出来停顿感。&lt;/p&gt;
+</content>
+        <category term="音视频" />
+        <category term="FFmpeg" />
+        <updated>2022-05-28T16:13:10.000Z</updated>
+    </entry>
+    <entry>
+        <id>http://example.com/2022/04/15/ffmpeg%E5%85%A5%E9%97%A8-%E5%9C%A8Windows11%20%E4%B8%8B%E7%BC%96%E8%AF%91Android%E5%B9%B3%E5%8F%B0%E5%AF%B9%E5%BA%94SO/</id>
+        <title>ffmpeg 的编译</title>
+        <link rel="alternate" href="http://example.com/2022/04/15/ffmpeg%E5%85%A5%E9%97%A8-%E5%9C%A8Windows11%20%E4%B8%8B%E7%BC%96%E8%AF%91Android%E5%B9%B3%E5%8F%B0%E5%AF%B9%E5%BA%94SO/"/>
+        <content type="html">&lt;p&gt;编译参考了&lt;span class=&#34;exturl&#34; data-url=&#34;aHR0cHM6Ly93d3cuY2F0Y2hpbmcudG9wLyMvYXJ0aWNsZS8xMDAwMDAxNTE4MzU3NzMw&#34;&gt;开发的猫&lt;/span&gt; 这位同学的编译教程&lt;/p&gt;
+&lt;p&gt;前置环境：&lt;br /&gt;
+操作系统：windows 11&lt;br /&gt;
+minGW：llvm-mingw-20220323-msvcrt-x86_64&lt;br /&gt;
+msys：msys2-x86_64-20220319.exe&lt;br /&gt;
+ndk：24.0.8215888&lt;br /&gt;
+llvm：ndk 自带&lt;br /&gt;
+ clang： ndk 自带&lt;br /&gt;
+ yasm&lt;br /&gt;
+git&lt;/p&gt;
+&lt;p&gt;msys 安装缺少工具：   &lt;code&gt;pacman -S &amp;lt;pkgname&amp;gt;&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;编译工具链地址：C:\Users\ZhenqianXu\AppData\Local\Android\Sdk\ndk\24.0.8215888\toolchains\llvm\prebuilt\windows-x86_64\bin&lt;br /&gt;
+ 交叉编译工具链地址：C:\Users\ZhenqianXu\AppData\Local\Android\Sdk\ndk\24.0.8215888\toolchains\llvm\prebuilt\windows-x86_64\sysroot&lt;/p&gt;
+&lt;p&gt;找到编译目标 Android 版本 29 需要的 clang 和 clang++ 文件&lt;br /&gt;
+ &lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;quot;C:\Users\ZhenqianXu\AppData\Local\Android\Sdk\ndk\24.0.8215888\toolchains\llvm\prebuilt\windows-x86_64\bin\armv7a-linux-androideabi29-clang&amp;quot;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;quot;C:\Users\ZhenqianXu\AppData\Local\Android\Sdk\ndk\24.0.8215888\toolchains\llvm\prebuilt\windows-x86_64\bin\armv7a-linux-androideabi29-clang++&amp;quot;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;br /&gt;
+ 进入 &lt;code&gt;configure&lt;/code&gt;  文件中，找到 CMDLINE_SET，在其中添加一个变量&lt;br /&gt;
+ &lt;code&gt;cross-prefix-clang&lt;/code&gt; &lt;br /&gt;
+ 然后就找到 &lt;code&gt;cc_default&lt;/code&gt; , &lt;code&gt;cxx_default&lt;/code&gt;  这两个变量定义的地方，修改为&lt;/p&gt;
+&lt;p&gt;&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;# clang set&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;cc_default=&amp;quot;$&amp;#123;cross_prefix_clang&amp;#125;$&amp;#123;cc_default&amp;#125;&amp;quot; cxx_default=&amp;quot;$&amp;#123;cross_prefix_clang&amp;#125;$&amp;#123;cxx_default&amp;#125;&amp;quot;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# 也可以直接改成下面的，这两个变量就是对应上面clang和clang++编译器路径&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;cc_default=&amp;quot;$&amp;#123;cross_prefix_clang&amp;#125;clang&amp;quot;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;cxx_default=&amp;quot;$&amp;#123;cross_prefix_clang&amp;#125;clang++&amp;quot;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;新建编译脚本：&lt;br /&gt;
+&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;23&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;24&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;25&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;26&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;27&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;28&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;29&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;30&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;31&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;32&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;33&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;34&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;35&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;36&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;37&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;38&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;39&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;40&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;41&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;42&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;43&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;44&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;45&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;46&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;47&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;48&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;49&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;50&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;51&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;52&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;53&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;54&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;55&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;56&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;57&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;58&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;59&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;60&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;61&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;62&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;63&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;64&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;65&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;66&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;67&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;68&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;69&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;70&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;71&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;72&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;73&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;74&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;75&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;76&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;77&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;78&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;79&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;80&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;81&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;82&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;83&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;84&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;85&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;86&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;87&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;88&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;#!/bin/bash&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;set -x&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# 目标Android版本&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;API=29&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;CPU=armv7-a&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;#so库输出目录&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;OUTPUT=/c/Users/XZQ/Desktop/FFmpeg/ffmpeg-4.2.2/android/$CPU&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# NDK的路径，根据自己的NDK位置进行设置&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;NDK=/c/Users/XZQ/AppData/Local/Android/Sdk/ndk/24.0.8215888&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# 编译工具链路径&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;TOOLCHAIN=$NDK/toolchains/llvm/prebuilt/windows-x86_64&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;# 编译环境&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;SYSROOT=$TOOLCHAIN/sysroot&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;function build&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  ./configure \&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  --prefix=$OUTPUT \&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  --target-os=android \&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  --arch=arm \&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  --cpu=armv7-a \&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  --enable-asm \&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  --enable-neon \&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  --enable-cross-compile \&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  --enable-shared \&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  --disable-static \&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  --disable-doc \&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  --disable-ffplay \&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  --disable-ffprobe \&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  --disable-symver \&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  --disable-ffmpeg \&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;//禁掉strip优化，避免了找不到strip工具报错&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  --disable-stripping \&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  --sysroot=$SYSROOT \&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  --cross-prefix=$TOOLCHAIN/bin/arm-linux-androideabi- \&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  --cross-prefix-clang=$TOOLCHAIN/bin/armv7a-linux-androideabi$API- \&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  --extra-cflags=&amp;quot;-fPIC&amp;quot;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  make clean all&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  # 这里是定义用几个线程编译&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  make -j12&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  make install&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;  &lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;build&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;在 msys 中运行该脚本：&lt;br /&gt;
+ &lt;code&gt;./build_android_clang.sh&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;编译成功&lt;br /&gt;
+&lt;img data-src=&#34;http://tvax3.sinaimg.cn/large/b5348f57gy1h19rj5f737j20wg0dwafa.jpg&#34; alt=&#34;屏幕截图 2022-04-15 012650&#34; /&gt;&lt;/p&gt;
+</content>
+        <category term="多媒体" />
+        <category term="ffmpeg" />
+        <updated>2022-04-14T16:06:55.000Z</updated>
+    </entry>
+</feed>

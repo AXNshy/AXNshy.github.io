@@ -1,0 +1,18 @@
+{
+    "version": "https://jsonfeed.org/version/1",
+    "title": "花咲く • All posts by \"二叉树\" tag",
+    "description": "编程笔记 & 学渣的自救",
+    "home_page_url": "http://example.com",
+    "items": [
+        {
+            "id": "http://example.com/2022/11/30/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%AE%97%E6%B3%95%E6%95%B4%E7%90%86/",
+            "url": "http://example.com/2022/11/30/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%AE%97%E6%B3%95%E6%95%B4%E7%90%86/",
+            "title": "二叉树算法整理",
+            "date_published": "2022-11-30T05:25:43.000Z",
+            "content_html": "<p>二叉搜索树</p>\n",
+            "tags": [
+                "二叉树"
+            ]
+        }
+    ]
+}

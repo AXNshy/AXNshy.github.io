@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<rss version="2.0">
+    <channel>
+        <title>花咲く • Posts by &#34;音视频&#34; tag</title>
+        <link>http://example.com</link>
+        <description>编程笔记 &amp; 学渣的自救</description>
+        <language>cn</language>
+        <pubDate>Sun, 29 May 2022 00:13:10 +0800</pubDate>
+        <lastBuildDate>Sun, 29 May 2022 00:13:10 +0800</lastBuildDate>
+        <category>Android</category>
+        <category>图像处理</category>
+        <category>C++</category>
+        <category>蓝牙</category>
+        <category>系统</category>
+        <category>Camera</category>
+        <category>Cmake</category>
+        <category>音视频</category>
+        <category>FFmpeg</category>
+        <category>多媒体</category>
+        <category>ExoPlayer</category>
+        <category>流媒体协议</category>
+        <category>HLS</category>
+        <category>算法</category>
+        <category>LeetCode</category>
+        <category>开发</category>
+        <category>Mac</category>
+        <category>OpenGL ES</category>
+        <category>OpenGL ES2.0</category>
+        <category>OpenGL ES3.0</category>
+        <category>OpenSLES</category>
+        <category>插件化</category>
+        <category>Dalvik虚拟机</category>
+        <category>leetcode</category>
+        <category>ffmpeg</category>
+        <category>日语</category>
+        <category>歌词</category>
+        <category>排序算法</category>
+        <category>二叉树</category>
+        <category>Algorithm</category>
+        <category>数据结构</category>
+        <category>树</category>
+        <category>BFS</category>
+        <item>
+            <guid isPermalink="true">http://example.com/2022/05/29/FFmpeg%E4%B9%8B%E9%9F%B3%E8%A7%86%E9%A2%91%E5%90%8C%E6%AD%A5/</guid>
+            <title>FFmpeg之音视频同步</title>
+            <link>http://example.com/2022/05/29/FFmpeg%E4%B9%8B%E9%9F%B3%E8%A7%86%E9%A2%91%E5%90%8C%E6%AD%A5/</link>
+            <category>音视频</category>
+            <category>FFmpeg</category>
+            <pubDate>Sun, 29 May 2022 00:13:10 +0800</pubDate>
+            <description><![CDATA[ &lt;p&gt;音视频同步问题解释之前先需要了解几个基本的音视频的概念：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;pts  渲染时间戳（Presentation TimeStamp）&lt;/li&gt;
+&lt;li&gt;dts 解码时间戳 （Decode TimeStamp）&lt;/li&gt;
+&lt;li&gt;fps 每秒显示的帧数（Frame Per Second）：帧率&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;音频解码&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#音频解码&#34;&gt;#&lt;/a&gt; 音频解码&lt;/h3&gt;
+&lt;p&gt;音频解码是顺序解码，所以音频的 PTS 和 DTS 是一样的，当前解码的帧就是当前需要显示的帧。&lt;/p&gt;
+&lt;h3 id=&#34;视频解码&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#视频解码&#34;&gt;#&lt;/a&gt; 视频解码&lt;/h3&gt;
+&lt;p&gt;在视频解码中，由于采用了双向预测的帧间压缩技术，视频帧的解码顺序和视频帧的显示顺序就不一样了。&lt;br /&gt;
+举个简单的例子：&lt;br /&gt;
+有 1,2,3 这三张顺序显示的图片，第 1 张图片不依赖其他图片进行解码；第二张图片依赖第一张和第三张图片进行解码；第三张图片依赖第一张图片进行解码。&lt;/p&gt;
+&lt;p&gt;如果按照 1-&amp;gt;2-&amp;gt;3 的顺序解码，那么由于 2 需要 1 和 3 进行解码，那么 2 就会解码失败。&lt;br /&gt;
+所以为了成功的对 1,2,3 都进行解码，就应该按照下面的顺序进行解码：1-&amp;gt;3-&amp;gt;2, 这个顺序就是 dts 的顺序。&lt;/p&gt;
+&lt;h3 id=&#34;音视频同步问题&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#音视频同步问题&#34;&gt;#&lt;/a&gt; 音视频同步问题&lt;/h3&gt;
+&lt;h4 id=&#34;1音频播放速度异常&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#1音频播放速度异常&#34;&gt;#&lt;/a&gt; 1. 音频播放速度异常&lt;/h4&gt;
+&lt;p&gt;可能原因：&lt;br /&gt;
+1.1 音频播放器采样率参数设置错误&lt;br /&gt;
+如果设置的采样率大于真实采用率，那么音频播放速度会比正常速度快；如果设置的采样率小于真实采样率，那么音频播放速度会比正常速度慢。&lt;/p&gt;
+&lt;p&gt;1.2 音频解码速度太快，没有做同步，需要根据真实世界时钟速度进行同步解码&lt;/p&gt;
+&lt;h4 id=&#34;2视频播放速度异常&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#2视频播放速度异常&#34;&gt;#&lt;/a&gt; 2. 视频播放速度异常&lt;/h4&gt;
+&lt;p&gt;可能原因：&lt;br /&gt;
+2.1 视频解码速度太快，没有进行音视频同步或者音视频同步出错。&lt;/p&gt;
+&lt;h3 id=&#34;音视频同步策略&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#音视频同步策略&#34;&gt;#&lt;/a&gt; 音视频同步策略&lt;/h3&gt;
+&lt;p&gt;音视频同步策略有三种：&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;以视频 pts 为准进行同步&lt;/li&gt;
+&lt;li&gt;以音频 pts 为基准进行同步&lt;/li&gt;
+&lt;li&gt;以真实世界时钟速度进行同步&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;常用第二种和第三种同步策略，为什么不使用第一种，是因为人的感观是对音频信号比视频画面更敏感，如果使用视频 pts 为基准的话，能感觉到明显的音频速度变化，而我们人眼对视频画面的变化是不敏感的，只要渲染的速度达到每秒 60 帧，对人的肉眼就看不出来停顿感。&lt;/p&gt;
+ ]]></description>
+        </item>
+    </channel>
+</rss>

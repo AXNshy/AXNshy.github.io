@@ -1,0 +1,19 @@
+{
+    "version": "https://jsonfeed.org/version/1",
+    "title": "花咲く • All posts by \"camera\" tag",
+    "description": "编程笔记 & 学渣的自救",
+    "home_page_url": "http://example.com",
+    "items": [
+        {
+            "id": "http://example.com/2022/06/20/Android-%E7%9B%B8%E6%9C%BA%E5%AD%90%E7%B3%BB%E7%BB%9F/",
+            "url": "http://example.com/2022/06/20/Android-%E7%9B%B8%E6%9C%BA%E5%AD%90%E7%B3%BB%E7%BB%9F/",
+            "title": "Android 相机子系统",
+            "date_published": "2022-06-20T15:42:47.000Z",
+            "content_html": "<p>Android Camera 架构</p>\n<p><img data-src=\"http://tva3.sinaimg.cn/large/b5348f57gy1h3f5lczmiuj20kt0gkgqt.jpg\" alt=\"相机系统\" /></p>\n<p>第一层： Java  APP<br />\n 第二层： Framework 封装 java 层的调用；实现 native 层的 CameraService<br />\n 第三层： Camera HAL google 实现的 HIDL 标准接口，同时芯片厂商和 OEM 厂商基于 HIDL 接口实现自己的功能<br />\n第四层： Driver 相机驱动层<br />\n第五层： 各种电子、感光元件以及相机依赖的硬件</p>\n<p>类：</p>\n<p>CameraServiceClient</p>\n<p>CameraDevice  CameraProviderManager</p>\n<p>Camera3Device</p>\n<p>CameraHAL</p>\n<h2 id=\"数据\"><a class=\"anchor\" href=\"#数据\">#</a> 数据</h2>\n<h3 id=\"camerametadata\"><a class=\"anchor\" href=\"#camerametadata\">#</a> CameraMetaData</h3>\n<p>以 key-value 的形式存储数据<br />\n Camera 系统中流转的三种主要数据都是继承了 CameraMetaData</p>\n<h3 id=\"capturechractoristics-静态数据\"><a class=\"anchor\" href=\"#capturechractoristics-静态数据\">#</a> CaptureChractoristics  静态数据</h3>\n<p>相机静态配置数据：</p>\n<ul>\n<li>输入流配置</li>\n<li>输出流配置</li>\n<li>高分辨率配置</li>\n<li>高帧率配置</li>\n</ul>\n<h3 id=\"capturerequest-拍摄请求\"><a class=\"anchor\" href=\"#capturerequest-拍摄请求\">#</a> CaptureRequest  拍摄请求</h3>\n<p>有 2 种类型的请求：</p>\n<ul>\n<li>capture   非重复请求</li>\n<li>repeating   重复请求   例如：实现预览的请求可以用 repeating 请求实现</li>\n</ul>\n<p>CameraCaptureSession 管理相机连接的会话</p>\n<p>CameraCaptureSession 由 createCameraSession 方法创建</p>\n<h3 id=\"captureresult-拍摄结果\"><a class=\"anchor\" href=\"#captureresult-拍摄结果\">#</a> CaptureResult  拍摄结果</h3>\n<h2 id=\"数据流向\"><a class=\"anchor\" href=\"#数据流向\">#</a> 数据流向</h2>\n<p>CameraDevice   CameraCaptureSession    CameraManager.AvailabilityCallback</p>\n",
+            "tags": [
+                "Android",
+                "Camera"
+            ]
+        }
+    ]
+}

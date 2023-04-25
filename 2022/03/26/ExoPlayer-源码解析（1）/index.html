@@ -1,0 +1,593 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#FFF">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+<link rel="alternate" type="application/rss+xml" title="花咲く" href="http://example.com/rss.xml" />
+<link rel="alternate" type="application/atom+xml" title="花咲く" href="http://example.com/atom.xml" />
+<link rel="alternate" type="application/json" title="花咲く" href="http://example.com/feed.json" />
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Mulish:300,300italic,400,400italic,700,700italic%7CFredericka%20the%20Great:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20JP:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20SC:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="/css/app.css?v=0.2.5">
+
+  
+  <meta name="keywords" content="Android,多媒体,ExoPlayer" />
+
+
+<link rel="canonical" href="http://example.com/2022/03/26/ExoPlayer-%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%881%EF%BC%89/">
+
+
+
+  <title>
+ExoPlayer 源码解析（1） |
+Hanasaku = 花咲く = blog</title>
+<meta name="generator" content="Hexo 6.1.0"></head>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div id="loading">
+    <div class="cat">
+      <div class="body"></div>
+      <div class="head">
+        <div class="face"></div>
+      </div>
+      <div class="foot">
+        <div class="tummy-end"></div>
+        <div class="bottom"></div>
+        <div class="legs left"></div>
+        <div class="legs right"></div>
+      </div>
+      <div class="paw">
+        <div class="hands left"></div>
+        <div class="hands right"></div>
+      </div>
+    </div>
+  </div>
+  <div id="container">
+    <header id="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="inner">
+        <div id="brand">
+          <div class="pjax">
+          
+  <h1 itemprop="name headline">ExoPlayer 源码解析（1）
+  </h1>
+  
+<div class="meta">
+  <span class="item" title="Created: 2022-03-26 18:52:40">
+    <span class="icon">
+      <i class="ic i-calendar"></i>
+    </span>
+    <span class="text">Posted on</span>
+    <time itemprop="dateCreated datePublished" datetime="2022-03-26T18:52:40+08:00">2022-03-26</time>
+  </span>
+  <span class="item" title="Symbols count in article">
+    <span class="icon">
+      <i class="ic i-pen"></i>
+    </span>
+    <span class="text">Symbols count in article</span>
+    <span>2.3k</span>
+    <span class="text">words</span>
+  </span>
+  <span class="item" title="Reading time">
+    <span class="icon">
+      <i class="ic i-clock"></i>
+    </span>
+    <span class="text">Reading time</span>
+    <span>2 mins.</span>
+  </span>
+</div>
+
+
+          </div>
+        </div>
+        <nav id="nav">
+  <div class="inner">
+    <div class="toggle">
+      <div class="lines" aria-label="Toggle navigation bar">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </div>
+    <ul class="menu">
+      <li class="item title"><a href="/" rel="start">Hanasaku</a></li>
+    </ul>
+    <ul class="right">
+      <li class="item theme">
+        <i class="ic i-sun"></i>
+      </li>
+      <li class="item search">
+        <i class="ic i-search"></i>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+      </div>
+      <div id="imgs" class="pjax">
+        <ul>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1giclfw2t96j20zk0m8x6p.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1giciuja1j1j20zk0m8kjl.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1giclg5ms2rj20zk0m8u0x.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gipeuv80yoj20zk0m8kjl.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1giclfb3vzhj20zk0m8wny.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gipev1x5e4j20zk0m8b29.jpg"></li>
+        </ul>
+      </div>
+    </header>
+    <div id="waves">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" />
+          <use xlink:href="#gentle-wave" x="48" y="3" />
+          <use xlink:href="#gentle-wave" x="48" y="5" />
+          <use xlink:href="#gentle-wave" x="48" y="7" />
+        </g>
+      </svg>
+    </div>
+    <main>
+      <div class="inner">
+        <div id="main" class="pjax">
+          
+  <div class="article wrap">
+    
+<div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<i class="ic i-home"></i>
+<span><a href="/">Home</a></span>
+</div>
+
+    <article itemscope itemtype="http://schema.org/Article" class="post block" lang="cn">
+  <link itemprop="mainEntityOfPage" href="http://example.com/2022/03/26/ExoPlayer-%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%881%EF%BC%89/">
+
+  <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="image" content="/images/avatar.png">
+    <meta itemprop="name" content="Luffy Xu">
+    <meta itemprop="description" content="blog, 编程笔记 & 学渣的自救">
+  </span>
+
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="花咲く">
+  </span>
+
+  <div class="body md" itemprop="articleBody">
+    
+
+    <h1 id="start"><a class="anchor" href="#start">#</a> Start</h1>
+<h2 id="1exoplayer起播时序图"><a class="anchor" href="#1exoplayer起播时序图">#</a> 1.ExoPlayer 起播时序图</h2>
+<p><img data-src="https://tva1.sinaimg.cn/large/b5348f57gy1h0oaiq9lpej21e313iqpe.jpg" alt="ExoPlayer播放.drawio" /></p>
+<h2 id="2exoplayer的初始化"><a class="anchor" href="#2exoplayer的初始化">#</a> 2.ExoPlayer 的初始化</h2>
+<p>先看看 ExoPlayer 的初始化</p>
+<p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">protected StyledPlayerView playerView;</span><br><span class="line">private DataSource.Factory dataSourceFactory;</span><br><span class="line"></span><br><span class="line">void onCreate(@Nullable Bundle savedInstanceState)&#123;</span><br><span class="line">	//创建</span><br><span class="line">	dataSourceFactory = DemoUtil.getDataSourceFactory(/* context= */ this);</span><br><span class="line">	....</span><br><span class="line">	//获取在XML中声明的StyledPlayerView对象</span><br><span class="line">	playerView = findViewById(R.id.player_view);</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//初始化ExoPlayer</span><br><span class="line">void initializePlayer()&#123;</span><br><span class="line">	//创建播放媒体列表对象</span><br><span class="line">	mediaItems = createMediaItems(intent);</span><br><span class="line">	//创建渲染器工厂对象</span><br><span class="line">	RenderersFactory renderersFactory =  </span><br><span class="line">   DemoUtil.buildRenderersFactory(/* context= */ this, preferExtensionDecoders);</span><br><span class="line">	//创建媒体通道选择器对象</span><br><span class="line">	trackSelector = new DefaultTrackSelector(/* context= */ this);</span><br><span class="line">	...</span><br><span class="line">	//创建ExoPlayer对象</span><br><span class="line">	player =  new ExoPlayer.Builder(/* context= */ this)  </span><br><span class="line">       	.setRenderersFactory(renderersFactory)  //设置渲染器工厂对象  </span><br><span class="line">       	.setMediaSourceFactory(createMediaSourceFactory())    //设置媒体源工厂对象  </span><br><span class="line">       	.setTrackSelector(trackSelector)    //设置媒体通道选择器  </span><br><span class="line">       	.build();</span><br><span class="line">	player.setTrackSelectionParameters(trackSelectionParameters);</span><br><span class="line">	//设置播放器事件回调</span><br><span class="line">	player.addListener(new PlayerEventListener());  </span><br><span class="line">	//设置音频参数</span><br><span class="line">	player.setAudioAttributes(AudioAttributes.DEFAULT, /* handleAudioFocus= */ true);  </span><br><span class="line">	//设置是否自动开始播放</span><br><span class="line">	player.setPlayWhenReady(startAutoPlay);</span><br><span class="line">	</span><br><span class="line">	player.prepare();</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<p>上面就是 ExoPlayer 的播放代码，总结一下播放的流程：</p>
+<ol>
+<li>创建 DataSource.Factory 工厂对象</li>
+<li>创建 StyledPlayerView 播放器 UI 对象</li>
+<li>创建 RenderersFactory 对象</li>
+<li>创建 MediaSource.Factory 对象</li>
+<li>创建 TrackSelector 对象</li>
+<li>通过 ExoPlayer.Builder 对象构造 ExoPlayer 对象</li>
+<li>添加播放器事件回调，设置默认音频参数</li>
+<li>设置是否自动开始播放</li>
+<li>开始起播</li>
+</ol>
+<h2 id="3重要的对象"><a class="anchor" href="#3重要的对象">#</a> 3. 重要的对象</h2>
+<ol>
+<li>
+<p>DataSource.Factory<br />
+DataSource.Factory 是负责创建 DataSource 对象的工厂类</p>
+</li>
+<li>
+<p>DataSource 代表 Uri 识别的数据源，根据不同的协议从不同媒体介质中获取视频数据流<br />
+下面是 ExoPlayer 实现了的数据源类型<br />
+<img data-src="https://tvax3.sinaimg.cn/large/b5348f57gy1h0oajo70wvj20xz0pdb0a.jpg" alt="DataSource实现类" /></p>
+</li>
+<li>
+<p>StyledPlayerView<br />
+ 播放器 UI 对象，包含了视频 UI，控制器 UI，字幕，专辑等</p>
+</li>
+<li>
+<p>RenderersFactory<br />
+RenderersFactory 是负责创建 Renderer 的工厂对象。</p>
+</li>
+<li>
+<p>Renderer 渲染器<br />
+ ExoPlayer 定义了 6 种 Renderer 对象：</p>
+</li>
+</ol>
+<ul>
+<li>VideoRenderer    视频渲染器，负责视频渲染，实现类有 MediaCodecVideoRenderer，还有 ffmpeg 扩展</li>
+<li>AudioRenderer   音频渲染器</li>
+<li>TextRenderer  字幕渲染器</li>
+<li>MetadataRenderer  视频元数据渲染器</li>
+<li>CameraMotionRenderer  相机动作渲染器，CameraMotionRenderer 是处理相机拍摄的视频播放时，相机在物理上可能会有旋转动作，导致相机拍摄的视频也会产生 rotation，所以在播放相机拍摄的视频时需要解析视频中的 rotation 属性，然后在 OpenGL ES 渲染的时候，将窗口进行旋转，使画面恢复正常方向。</li>
+<li>MiscellaneousRenderer  混合渲染器 ，Google 暂时没有实现该渲染器，应该是留作扩展用。<br />
+<img data-src="https://tvax4.sinaimg.cn/large/b5348f57gy1h0oak2u83fj20y80ieasz.jpg" alt="Renderer实现类" /></li>
+</ul>
+<ol start="6">
+<li>
+<p>MediaSource.Factory<br />
+MediaSource.Factory 是负责构造 MediaSource 对象的工厂类</p>
+</li>
+<li>
+<p>MediaSource 媒体源，ExoPlayer 使用 MediaSource 实现了多视频播放逻辑，还有不停了流媒体协议类型等。<br />
+ExoPlayer 预定义的 MediaSource 类型：<br />
+<img data-src="https://tva2.sinaimg.cn/large/b5348f57gy1h0oakcx1ssj20xi0exk6h.jpg" alt="MediaSource实现类" /></p>
+</li>
+<li>
+<p>TrackSelector<br />
+ 选择器：</p>
+</li>
+</ol>
+<ul>
+<li>媒体流：用于在播放时选择容器中封装的的不同的视频、音频通道，比如在 HLS\DASH 流播放时根据网络带宽，设备性能选择不同分辨率的流。</li>
+<li>通道：播放时根据情况选择视频中不同的视频 \ 音频 \ 字幕通道。</li>
+</ul>
+<h1 id="end"><a class="anchor" href="#end">#</a> End</h1>
+<p>这里先粗略分析了一下 ExoPlayer 大致播放流程，还有部分的类的介绍，后面再根据情况对不同模块进行分析。</p>
+
+      <div class="tags">
+          <a href="/tags/Android/" rel="tag"><i class="ic i-tag"></i> Android</a>
+          <a href="/tags/%E5%A4%9A%E5%AA%92%E4%BD%93/" rel="tag"><i class="ic i-tag"></i> 多媒体</a>
+          <a href="/tags/ExoPlayer/" rel="tag"><i class="ic i-tag"></i> ExoPlayer</a>
+      </div>
+  </div>
+
+   <footer>
+
+    <div class="meta">
+  <span class="item">
+    <span class="icon">
+      <i class="ic i-calendar-check"></i>
+    </span>
+    <span class="text">Edited on</span>
+    <time title="Modified: 2023-04-24 21:19:10" itemprop="dateModified" datetime="2023-04-24T21:19:10+08:00">2023-04-24</time>
+  </span>
+  <span id="2022/03/26/ExoPlayer-源码解析（1）/" class="item leancloud_visitors" data-flag-title="ExoPlayer 源码解析（1）" title="Views">
+      <span class="icon">
+        <i class="ic i-eye"></i>
+      </span>
+      <span class="text">Views</span>
+      <span class="leancloud-visitors-count"></span>
+      <span class="text">times</span>
+  </span>
+</div>
+
+      
+
+<div id="copyright">
+<ul>
+  <li class="author">
+    <strong>Post author:  </strong>Luffy Xu <i class="ic i-at"><em>@</em></i>花咲く
+  </li>
+  <li class="link">
+    <strong>Post link: </strong>
+    <a href="http://example.com/2022/03/26/ExoPlayer-%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%881%EF%BC%89/" title="ExoPlayer 源码解析（1）">http://example.com/2022/03/26/ExoPlayer-源码解析（1）/</a>
+  </li>
+  <li class="license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+  </footer>
+
+</article>
+
+  </div>
+  
+
+<div class="post-nav">
+    <div class="item left">
+      
+
+  <a href="/2019/03/28/LeetCode-17/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva2.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gipey84bjtj20zk0m8hdt.jpg" title="LeetCode 17">
+  <span class="type">Previous Post</span>
+  <span class="category"><i class="ic i-flag"></i> </span>
+  <h3>LeetCode 17</h3>
+  </a>
+
+    </div>
+    <div class="item right">
+      
+
+  <a href="/2022/03/30/Android%E7%B3%BB%E7%BB%9F%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tva2.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1giph47e9vtj20zk0m8x6l.jpg" title="Android系统启动流程">
+  <span class="type">Next Post</span>
+  <span class="category"><i class="ic i-flag"></i> </span>
+  <h3>Android系统启动流程</h3>
+  </a>
+
+    </div>
+</div>
+
+  
+  <div class="wrap" id="comments"></div>
+
+
+        </div>
+        <div id="sidebar">
+          
+
+<div class="inner">
+
+  <div class="panels">
+    <div class="inner">
+      <div class="contents panel pjax" data-title="Contents">
+          <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#start"><span class="toc-number">1.</span> <span class="toc-text"> Start</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1exoplayer%E8%B5%B7%E6%92%AD%E6%97%B6%E5%BA%8F%E5%9B%BE"><span class="toc-number">1.1.</span> <span class="toc-text"> 1.ExoPlayer 起播时序图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2exoplayer%E7%9A%84%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="toc-number">1.2.</span> <span class="toc-text"> 2.ExoPlayer 的初始化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3%E9%87%8D%E8%A6%81%E7%9A%84%E5%AF%B9%E8%B1%A1"><span class="toc-number">1.3.</span> <span class="toc-text"> 3. 重要的对象</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#end"><span class="toc-number">2.</span> <span class="toc-text"> End</span></a></li></ol>
+      </div>
+      <div class="related panel pjax" data-title="Related">
+      </div>
+      <div class="overview panel" data-title="Overview">
+        <div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="image" itemprop="image" alt="Luffy Xu"
+      data-src="/images/avatar.png">
+  <p class="name" itemprop="name">Luffy Xu</p>
+  <div class="description" itemprop="description">编程笔记 & 学渣的自救</div>
+</div>
+
+<nav class="state">
+    <div class="item posts">
+      <a href="/archives/">
+        <span class="count">31</span>
+        <span class="name">posts</span>
+      </a>
+    </div>
+    <div class="item tags">
+      <a href="/tags/">
+        <span class="count">33</span>
+        <span class="name">tags</span>
+      </a>
+    </div>
+</nav>
+
+<div class="social">
+      <span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWU=" title="https:&#x2F;&#x2F;github.com&#x2F;amehime"><i class="ic i-github"></i></span>
+      <span class="exturl item twitter" data-url="aHR0cHM6Ly90d2l0dGVyLmNvbS9hbWVoaW1l" title="https:&#x2F;&#x2F;twitter.com&#x2F;amehime"><i class="ic i-twitter"></i></span>
+      <span class="exturl item zhihu" data-url="aHR0cHM6Ly93d3cuemhpaHUuY29tL3Blb3BsZS9ydXJpc216aw==" title="https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;rurismzk"><i class="ic i-zhihu"></i></span>
+      <span class="exturl item music" data-url="aHR0cHM6Ly9tdXNpYy4xNjMuY29tLyMvdXNlci9ob21lP2lkPTEyODg2ODIz" title="https:&#x2F;&#x2F;music.163.com&#x2F;#&#x2F;user&#x2F;home?id&#x3D;12886823"><i class="ic i-cloud-music"></i></span>
+      <span class="exturl item weibo" data-url="aHR0cHM6Ly93ZWliby5jb20vYW1laGltZQ==" title="https:&#x2F;&#x2F;weibo.com&#x2F;amehime"><i class="ic i-weibo"></i></span>
+      <span class="exturl item about" data-url="aHR0cHM6Ly9hYm91dC5tZS9hbWVoaW1l" title="https:&#x2F;&#x2F;about.me&#x2F;amehime"><i class="ic i-address-card"></i></span>
+</div>
+
+<ul class="menu">
+  
+    
+  <li class="item">
+    <a href="/" rel="section"><i class="ic i-home"></i>Home</a>
+  </li>
+
+        
+  <li class="item dropdown">
+      <a href="javascript:void(0);"><i class="ic i-feather"></i>Posts</a>
+    <ul class="submenu">
+
+        
+  <li class="item">
+    <a href="/archives/" rel="section"><i class="ic i-list-alt"></i>Archives</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/categories/" rel="section"><i class="ic i-th"></i>Categories</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/tags/" rel="section"><i class="ic i-tags"></i>Tags</a>
+  </li>
+
+  </ul>
+    
+  <li class="item">
+    <a href="/friends/" rel="section"><i class="ic i-heart"></i>Friends</a>
+  </li>
+
+
+</ul>
+
+      </div>
+    </div>
+  </div>
+
+  <ul id="quick">
+    <li class="prev pjax">
+        <a href="/2019/03/28/LeetCode-17/" rel="prev" title="Previous Post"><i class="ic i-chevron-left"></i></a>
+    </li>
+    <li class="up"><i class="ic i-arrow-up"></i></li>
+    <li class="down"><i class="ic i-arrow-down"></i></li>
+    <li class="next pjax">
+        <a href="/2022/03/30/Android%E7%B3%BB%E7%BB%9F%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/" rel="next" title="Next Post"><i class="ic i-chevron-right"></i></a>
+    </li>
+    <li class="percent"></li>
+  </ul>
+</div>
+
+
+        </div>
+        <div class="dimmer"></div>
+      </div>
+    </main>
+    <footer id="footer">
+      <div class="inner">
+        <div class="widgets">
+          
+<div class="rpost pjax">
+  <h2>Random Posts</h2>
+  <ul>
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/05/29/FFmpeg%E4%B9%8B%E9%9F%B3%E8%A7%86%E9%A2%91%E5%90%8C%E6%AD%A5/" title="FFmpeg之音视频同步">FFmpeg之音视频同步</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/12/12/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E5%AE%9E%E7%8E%B0/" title="正则表达式的实现">正则表达式的实现</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/04/15/OpenGL-ES3-0-%E5%85%A5%E9%97%A8-%E7%94%BB%E4%B8%89%E8%A7%92%E5%BD%A2/" title="OpenGL ES3.0 入门-画三角形">OpenGL ES3.0 入门-画三角形</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/03/31/Android-Surface%E6%B8%B2%E6%9F%93%E6%9C%BA%E5%88%B6/" title="Android Surface渲染机制">Android Surface渲染机制</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/11/30/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%AE%97%E6%B3%95%E6%95%B4%E7%90%86/" title="二叉树算法整理">二叉树算法整理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/06/20/Android-%E7%9B%B8%E6%9C%BA%E5%AD%90%E7%B3%BB%E7%BB%9F/" title="Android 相机子系统">Android 相机子系统</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/08/05/Media%E6%9E%B6%E6%9E%84-%E9%9F%B3%E9%A2%91/" title="Media架构-音频">Media架构-音频</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2019/03/28/LeetCode-17/" title="LeetCode 17">LeetCode 17</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2017/07/12/OpenGL-ES2-0%E4%B8%AD%E7%9A%84%E7%BA%B9%E7%90%86/" title="OpenGL ES2.0中的纹理">OpenGL ES2.0中的纹理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2018/06/10/HLS%E7%9F%A5%E8%AF%86%E7%82%B9/" title="HLS知识点">HLS知识点</a></span>
+  </li>
+
+  </ul>
+</div>
+<div>
+  <h2>Recent Comments</h2>
+  <ul class="leancloud-recent-comment"></ul>
+</div>
+
+        </div>
+        <div class="status">
+  <div class="copyright">
+    
+    &copy; 2010 – 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="ic i-sakura rotate"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Luffy Xu @ Hanasaku</span>
+  </div>
+  <div class="count">
+    <span class="post-meta-item-icon">
+      <i class="ic i-chart-area"></i>
+    </span>
+    <span title="Symbols count total">76k words</span>
+
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="ic i-coffee"></i>
+    </span>
+    <span title="Reading time total">1:09</span>
+  </div>
+  <div class="powered-by">
+    Powered by <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span>
+  </div>
+</div>
+
+      </div>
+    </footer>
+  </div>
+<script data-config type="text/javascript">
+  var LOCAL = {
+    path: '2022/03/26/ExoPlayer-源码解析（1）/',
+    favicon: {
+      show: "（●´3｀●）Goooood",
+      hide: "(´Д｀)Booooom"
+    },
+    search : {
+      placeholder: "Search for Posts",
+      empty: "We didn't find any results for the search: ${query}",
+      stats: "${hits} results found in ${time} ms"
+    },
+    valine: true,fancybox: true,
+    copyright: 'Copied to clipboard successfully! <br> All articles in this blog are licensed under <i class="ic i-creative-commons"></i>BY-NC-SA.',
+    ignores : [
+      function(uri) {
+        return uri.includes('#');
+      },
+      function(uri) {
+        return new RegExp(LOCAL.path+"$").test(uri);
+      }
+    ]
+  };
+</script>
+
+<script src="https://cdn.polyfill.io/v2/polyfill.js"></script>
+
+<script src="//cdn.jsdelivr.net/combine/npm/pace-js@1.0.2/pace.min.js,npm/pjax@0.2.8/pjax.min.js,npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js,npm/animejs@3.2.0/lib/anime.min.js,npm/algoliasearch@4/dist/algoliasearch-lite.umd.js,npm/instantsearch.js@4/dist/instantsearch.production.min.js,npm/lozad@1/dist/lozad.min.js,npm/quicklink@2/dist/quicklink.umd.js"></script>
+
+<script src="/js/app.js?v=0.2.5"></script>
+
+
+
+
+</body>
+</html>

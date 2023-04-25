@@ -1,0 +1,540 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#FFF">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+<link rel="alternate" type="application/rss+xml" title="花咲く" href="http://example.com/rss.xml" />
+<link rel="alternate" type="application/atom+xml" title="花咲く" href="http://example.com/atom.xml" />
+<link rel="alternate" type="application/json" title="花咲く" href="http://example.com/feed.json" />
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Mulish:300,300italic,400,400italic,700,700italic%7CFredericka%20the%20Great:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20JP:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20SC:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="/css/app.css?v=0.2.5">
+
+  
+  <meta name="keywords" content="C++,数据结构,树,BFS" />
+
+
+<link rel="canonical" href="http://example.com/2022/04/02/%E6%A0%91/">
+
+
+
+  <title>
+树 |
+Hanasaku = 花咲く = blog</title>
+<meta name="generator" content="Hexo 6.1.0"></head>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div id="loading">
+    <div class="cat">
+      <div class="body"></div>
+      <div class="head">
+        <div class="face"></div>
+      </div>
+      <div class="foot">
+        <div class="tummy-end"></div>
+        <div class="bottom"></div>
+        <div class="legs left"></div>
+        <div class="legs right"></div>
+      </div>
+      <div class="paw">
+        <div class="hands left"></div>
+        <div class="hands right"></div>
+      </div>
+    </div>
+  </div>
+  <div id="container">
+    <header id="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="inner">
+        <div id="brand">
+          <div class="pjax">
+          
+  <h1 itemprop="name headline">树
+  </h1>
+  
+<div class="meta">
+  <span class="item" title="Created: 2022-04-02 00:55:04">
+    <span class="icon">
+      <i class="ic i-calendar"></i>
+    </span>
+    <span class="text">Posted on</span>
+    <time itemprop="dateCreated datePublished" datetime="2022-04-02T00:55:04+08:00">2022-04-02</time>
+  </span>
+  <span class="item" title="Symbols count in article">
+    <span class="icon">
+      <i class="ic i-pen"></i>
+    </span>
+    <span class="text">Symbols count in article</span>
+    <span>4.6k</span>
+    <span class="text">words</span>
+  </span>
+  <span class="item" title="Reading time">
+    <span class="icon">
+      <i class="ic i-clock"></i>
+    </span>
+    <span class="text">Reading time</span>
+    <span>4 mins.</span>
+  </span>
+</div>
+
+
+          </div>
+        </div>
+        <nav id="nav">
+  <div class="inner">
+    <div class="toggle">
+      <div class="lines" aria-label="Toggle navigation bar">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </div>
+    <ul class="menu">
+      <li class="item title"><a href="/" rel="start">Hanasaku</a></li>
+    </ul>
+    <ul class="right">
+      <li class="item theme">
+        <i class="ic i-sun"></i>
+      </li>
+      <li class="item search">
+        <i class="ic i-search"></i>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+      </div>
+      <div id="imgs" class="pjax">
+        <ul>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gipewf5l51j20zk0m8b29.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gipeyonbf9j20zk0m8e81.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gipewr8iypj20zk0m8b29.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1giclh0m9pdj20zk0m8hdt.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1giciusoyjnj219g0u0x56.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gipeuv80yoj20zk0m8kjl.jpg"></li>
+        </ul>
+      </div>
+    </header>
+    <div id="waves">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" />
+          <use xlink:href="#gentle-wave" x="48" y="3" />
+          <use xlink:href="#gentle-wave" x="48" y="5" />
+          <use xlink:href="#gentle-wave" x="48" y="7" />
+        </g>
+      </svg>
+    </div>
+    <main>
+      <div class="inner">
+        <div id="main" class="pjax">
+          
+  <div class="article wrap">
+    
+<div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<i class="ic i-home"></i>
+<span><a href="/">Home</a></span>
+</div>
+
+    <article itemscope itemtype="http://schema.org/Article" class="post block" lang="cn">
+  <link itemprop="mainEntityOfPage" href="http://example.com/2022/04/02/%E6%A0%91/">
+
+  <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="image" content="/images/avatar.png">
+    <meta itemprop="name" content="Luffy Xu">
+    <meta itemprop="description" content="blog, 编程笔记 & 学渣的自救">
+  </span>
+
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="花咲く">
+  </span>
+
+  <div class="body md" itemprop="articleBody">
+    
+
+    <h1 id="树的遍历算法"><a class="anchor" href="#树的遍历算法">#</a> 树的遍历算法</h1>
+<h2 id="bfs-广度优先遍历模板代码"><a class="anchor" href="#bfs-广度优先遍历模板代码">#</a> BFS (广度优先遍历) 模板代码</h2>
+<p>非递归方式，借用队列结构。</p>
+<p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">vector&lt;vector&lt;int&gt;&gt; levelOrderBottom1(TreeNode* root) &#123;</span><br><span class="line">		vector&lt;vector&lt;int&gt;&gt; result;</span><br><span class="line">		queue&lt;TreeNode*&gt; mQueue;</span><br><span class="line">		int level = 0;</span><br><span class="line">		if (root == nullptr) &#123;</span><br><span class="line">			return result;</span><br><span class="line">		&#125;</span><br><span class="line">		mQueue.push(root);</span><br><span class="line">		while (!mQueue.empty())</span><br><span class="line">		&#123;	</span><br><span class="line">			</span><br><span class="line">			result.push_back(vector&lt;int&gt;());</span><br><span class="line">			int size = mQueue.size();</span><br><span class="line">			</span><br><span class="line">			for (int i = 0; i &lt; size; i++) &#123;</span><br><span class="line">				TreeNode* front = mQueue.front();</span><br><span class="line">				mQueue.pop();</span><br><span class="line">				result[level].push_back(front-&gt;val);</span><br><span class="line">				if (front-&gt;left != nullptr) &#123;</span><br><span class="line">					mQueue.push(front-&gt;left);</span><br><span class="line">				&#125;</span><br><span class="line">				if (front-&gt;right != nullptr) &#123;</span><br><span class="line">					mQueue.push(front-&gt;right);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			level++;</span><br><span class="line">		&#125;</span><br><span class="line">		return result;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="dfs深度优先遍历模板代码"><a class="anchor" href="#dfs深度优先遍历模板代码">#</a> DFS (深度优先遍历) 模板代码</h2>
+<p>非递归方式，借用栈数据结构<br />
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">void dfs(TreeNode* root) &#123;</span><br><span class="line"></span><br><span class="line">        vector&lt;int&gt; result;</span><br><span class="line"></span><br><span class="line">        stack&lt;TreeNode*&gt; mStack;</span><br><span class="line"></span><br><span class="line">        if(root != nullptr)&#123;</span><br><span class="line"></span><br><span class="line">            mStack.push(root);</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        while(!mStack.empty())&#123;</span><br><span class="line"></span><br><span class="line">            TreeNode* node = mStack.top();</span><br><span class="line"></span><br><span class="line">            mStack.pop();</span><br><span class="line">			</span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">            if(node-&gt;right != nullptr)&#123;</span><br><span class="line"></span><br><span class="line">                mStack.push(node-&gt;right);</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            if(node-&gt;left != nullptr)&#123;</span><br><span class="line"></span><br><span class="line">                mStack.push(node-&gt;left);</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        return result;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="中序遍历非递归实现"><a class="anchor" href="#中序遍历非递归实现">#</a> 中序遍历非递归实现</h2>
+<p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">vector&lt;int&gt; midorder(TreeNode* root)&#123;</span><br><span class="line">	vector&lt;int&gt; res;</span><br><span class="line">	if(root == nullptr)&#123;</span><br><span class="line">		return res;</span><br><span class="line">	&#125;</span><br><span class="line">	stack&lt;TreeNode*&gt; mStk;</span><br><span class="line">	if(!mStk.empty() || root != nullptr)&#123;</span><br><span class="line">		while(root!= nullptr)&#123;</span><br><span class="line">			mStk.push(root);</span><br><span class="line">			root = root-&gt;left;</span><br><span class="line">		&#125;	</span><br><span class="line">		TreeNode *node = mStk.top();</span><br><span class="line">		mStk.pop();</span><br><span class="line">		res.push(node-&gt;val);</span><br><span class="line">		root = node-&gt;right;</span><br><span class="line">	&#125;</span><br><span class="line">	return res;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<h2 id="后序遍历非递归"><a class="anchor" href="#后序遍历非递归">#</a> 后序遍历非递归</h2>
+<p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">vector&lt;int&gt; postOrder(TreeNode* root)&#123;</span><br><span class="line">	vector&lt;int&gt; res;</span><br><span class="line">	if(root == nullptr)&#123;</span><br><span class="line">		return res;</span><br><span class="line">	&#125;</span><br><span class="line">	stack&lt;TreeNode*&gt; mStk;</span><br><span class="line">	TreeNode* prev;</span><br><span class="line">	while(root!= nullptr || !mStk.empty())&#123;</span><br><span class="line">		while(root != nullptr)&#123;</span><br><span class="line">			mStk.push(root);</span><br><span class="line">			root = root.left;</span><br><span class="line">		&#125;</span><br><span class="line">		TreeNode* node = mStk.top();</span><br><span class="line">		if(node-&gt;right == null || node-&gt;right == prev)&#123;</span><br><span class="line">			mStk.pop();</span><br><span class="line">			res.push(node-&gt;val);</span><br><span class="line">			pre = node;</span><br><span class="line">			root = nullptr;</span><br><span class="line">		&#125;else&#123;</span><br><span class="line">			mStk.push(node-&gt;right);</span><br><span class="line">			root = node-&gt;right;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	return res;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<h3 id="224-基本计算器"><a class="anchor" href="#224-基本计算器">#</a> 224 基本计算器</h3>
+<p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">int calculate(string s) &#123;</span><br><span class="line">	</span><br><span class="line">		//定义栈存储参数</span><br><span class="line">        stack&lt;int&gt; nums;</span><br><span class="line">		//预存入一个数字0，防止首个字符是运算符号</span><br><span class="line">        nums.push(0);</span><br><span class="line">		//定义栈存储操作符</span><br><span class="line">        stack&lt;char&gt; ops;</span><br><span class="line"></span><br><span class="line">        bool f = false;</span><br><span class="line"></span><br><span class="line">        for(int i=0;i&lt;s.length();i++)&#123;</span><br><span class="line">			</span><br><span class="line">            if(s[i] ==&#x27; &#x27;)//遇到空格跳过</span><br><span class="line">			&#123;</span><br><span class="line"></span><br><span class="line">                continue;</span><br><span class="line"></span><br><span class="line">            &#125;else if(s[i] == &#x27;+&#x27; || s[i] == &#x27;-&#x27;) //遇到运算符</span><br><span class="line">			&#123;</span><br><span class="line"></span><br><span class="line">                f = false;</span><br><span class="line">				//判断运算符号签名的字符是否为左括号，如果是，则在参数栈增加一个参数，用于于防止左括号后首个字符是运算符的情况</span><br><span class="line"></span><br><span class="line">                if(i &gt; 0 &amp;&amp; s[i-1] == &#x27;(&#x27;)&#123;</span><br><span class="line"></span><br><span class="line">                    nums.push(0);</span><br><span class="line"></span><br><span class="line">                &#125;</span><br><span class="line">				//推入符号</span><br><span class="line">                ops.push(s[i]);</span><br><span class="line"></span><br><span class="line">            &#125;else if(s[i] == &#x27;(&#x27;)//遇到左括号</span><br><span class="line">			&#123;</span><br><span class="line"></span><br><span class="line">                 f = false;</span><br><span class="line"></span><br><span class="line">                ops.push(s[i]);</span><br><span class="line"></span><br><span class="line">            &#125;else if(s[i] == &#x27;)&#x27;)//遇到右括号，先弹出符号栈栈顶的左括号（栈顶必须是左括号，否则表达式错误）</span><br><span class="line">			&#123;</span><br><span class="line"></span><br><span class="line">                ops.pop();</span><br><span class="line"></span><br><span class="line">                if(!ops.empty() &amp;&amp; ops.top() != &#x27;(&#x27;)&#123;</span><br><span class="line">					//计算括号内与括号左边数字的计算结果</span><br><span class="line"></span><br><span class="line">                    if(ops.top() == &#x27;+&#x27;)&#123;</span><br><span class="line"></span><br><span class="line">                        int right = nums.top();nums.pop();</span><br><span class="line"></span><br><span class="line">                        int left = nums.top();nums.pop();</span><br><span class="line"></span><br><span class="line">                        nums.push(left + right);</span><br><span class="line"></span><br><span class="line">                        ops.pop();</span><br><span class="line"></span><br><span class="line">                    &#125;else if(ops.top() == &#x27;-&#x27;)&#123;</span><br><span class="line"></span><br><span class="line">                        int right = nums.top();nums.pop();</span><br><span class="line"></span><br><span class="line">                        int left = nums.top();nums.pop();</span><br><span class="line"></span><br><span class="line">                        nums.push(left - right);</span><br><span class="line"></span><br><span class="line">                        ops.pop();</span><br><span class="line"></span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">			else//遇到数字</span><br><span class="line">			&#123;</span><br><span class="line">				//遇到数字左边也是数字，那就将参数栈顶弹出，与当前数字组成更大的数，然后再压入</span><br><span class="line"></span><br><span class="line">                if(i&gt;0 &amp;&amp;  s[i-1] &gt;= &#x27;0&#x27; &amp;&amp; s[i-1] &lt;= &#x27;9&#x27; )&#123;</span><br><span class="line"></span><br><span class="line">                        int v = nums.top();nums.pop();</span><br><span class="line"></span><br><span class="line">                        v = v*10 + (s[i] - &#x27;0&#x27;);</span><br><span class="line"></span><br><span class="line">                        nums.push(v);</span><br><span class="line"></span><br><span class="line">                &#125;else&#123;</span><br><span class="line">				//直接压入</span><br><span class="line"></span><br><span class="line">                    nums.push(s[i] - &#x27;0&#x27;);</span><br><span class="line"></span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">  </span><br><span class="line">				//遇到数字右边也是数字，那么先不取符号栈中的符号进行运算，继续遍历</span><br><span class="line">                if(i+1&lt;s.length() &amp;&amp;  s[i+1] &gt;=&#x27;0&#x27; &amp;&amp; s[i+1] &lt;= &#x27;9&#x27; )&#123;</span><br><span class="line"></span><br><span class="line">                &#125;else&#123;</span><br><span class="line">					//参数参加计算得到新参数</span><br><span class="line">                    if(!ops.empty())&#123;</span><br><span class="line"></span><br><span class="line">                        if(ops.top() == &#x27;+&#x27;)&#123;</span><br><span class="line"></span><br><span class="line">                            int right = nums.top();nums.pop();</span><br><span class="line"></span><br><span class="line">                            int left = nums.top();nums.pop();</span><br><span class="line"></span><br><span class="line">                            nums.push(left + right);</span><br><span class="line"></span><br><span class="line">                            ops.pop();</span><br><span class="line"></span><br><span class="line">                        &#125;else if(ops.top() == &#x27;-&#x27;)&#123;</span><br><span class="line"></span><br><span class="line">                            int right = nums.top();nums.pop();</span><br><span class="line"></span><br><span class="line">                            int left = nums.top();nums.pop();</span><br><span class="line"></span><br><span class="line">                            nums.push(left - right);</span><br><span class="line"></span><br><span class="line">                            ops.pop();</span><br><span class="line"></span><br><span class="line">                        &#125;</span><br><span class="line"></span><br><span class="line">                    &#125;</span><br><span class="line"></span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">        &#125;  </span><br><span class="line"></span><br><span class="line">        return nums.top(); </span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="二叉搜索树"><a class="anchor" href="#二叉搜索树">#</a> 二叉搜索树</h2>
+<p>性质一： 二叉搜索树的中序遍历是递增序列</p>
+<h4 id="由一个递增序列构建二叉搜索树"><a class="anchor" href="#由一个递增序列构建二叉搜索树">#</a> 由一个递增序列构建二叉搜索树</h4>
+<p>使用递归法构建 BST 树<br />
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">TreeNode* buildBinarySearchTree(Vector&lt;int&gt;&amp; nums)&#123;</span><br><span class="line"></span><br><span class="line">    return buildBinarySearchTree(nums,0,nums.size()-1);</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">TreeNode* buildBinarySearchTree(Vector&lt;int&gt;&amp; nums, int left,int right)&#123;</span><br><span class="line"></span><br><span class="line">    if(left &gt; right)&#123;</span><br><span class="line"></span><br><span class="line">        return nullptr;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">    int mid = (right - left) / 2 + left;</span><br><span class="line"></span><br><span class="line">    TreeNode* node = new TreeNode(nums[mid]);</span><br><span class="line"></span><br><span class="line">    node-&gt;left = buildBinarySearchTree(nums,left, mid-1);</span><br><span class="line"></span><br><span class="line">    node-&gt;right = buildBinarySearchTree(nums,mid+1,right);</span><br><span class="line"></span><br><span class="line">    return node;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+
+      <div class="tags">
+          <a href="/tags/C/" rel="tag"><i class="ic i-tag"></i> C++</a>
+          <a href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" rel="tag"><i class="ic i-tag"></i> 数据结构</a>
+          <a href="/tags/%E6%A0%91/" rel="tag"><i class="ic i-tag"></i> 树</a>
+          <a href="/tags/BFS/" rel="tag"><i class="ic i-tag"></i> BFS</a>
+      </div>
+  </div>
+
+   <footer>
+
+    <div class="meta">
+  <span class="item">
+    <span class="icon">
+      <i class="ic i-calendar-check"></i>
+    </span>
+    <span class="text">Edited on</span>
+    <time title="Modified: 2023-04-24 21:19:10" itemprop="dateModified" datetime="2023-04-24T21:19:10+08:00">2023-04-24</time>
+  </span>
+  <span id="2022/04/02/树/" class="item leancloud_visitors" data-flag-title="树" title="Views">
+      <span class="icon">
+        <i class="ic i-eye"></i>
+      </span>
+      <span class="text">Views</span>
+      <span class="leancloud-visitors-count"></span>
+      <span class="text">times</span>
+  </span>
+</div>
+
+      
+
+<div id="copyright">
+<ul>
+  <li class="author">
+    <strong>Post author:  </strong>Luffy Xu <i class="ic i-at"><em>@</em></i>花咲く
+  </li>
+  <li class="link">
+    <strong>Post link: </strong>
+    <a href="http://example.com/2022/04/02/%E6%A0%91/" title="树">http://example.com/2022/04/02/树/</a>
+  </li>
+  <li class="license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+  </footer>
+
+</article>
+
+  </div>
+  
+
+<div class="post-nav">
+    <div class="item left">
+      
+
+  <a href="/2022/03/31/Android-%E8%93%9D%E7%89%99%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva2.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gicitf0kl1j20zk0m87fe.jpg" title="Android 蓝牙应用开发流程">
+  <span class="type">Previous Post</span>
+  <span class="category"><i class="ic i-flag"></i> </span>
+  <h3>Android 蓝牙应用开发流程</h3>
+  </a>
+
+    </div>
+    <div class="item right">
+      
+
+  <a href="/2022/04/02/%E4%BA%91%E9%9B%80/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tva2.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1giclfb3vzhj20zk0m8wny.jpg" title="云雀">
+  <span class="type">Next Post</span>
+  <span class="category"><i class="ic i-flag"></i> </span>
+  <h3>云雀</h3>
+  </a>
+
+    </div>
+</div>
+
+  
+  <div class="wrap" id="comments"></div>
+
+
+        </div>
+        <div id="sidebar">
+          
+
+<div class="inner">
+
+  <div class="panels">
+    <div class="inner">
+      <div class="contents panel pjax" data-title="Contents">
+          <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86%E7%AE%97%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text"> 树的遍历算法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#bfs-%E5%B9%BF%E5%BA%A6%E4%BC%98%E5%85%88%E9%81%8D%E5%8E%86%E6%A8%A1%E6%9D%BF%E4%BB%A3%E7%A0%81"><span class="toc-number">1.1.</span> <span class="toc-text"> BFS (广度优先遍历) 模板代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#dfs%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E9%81%8D%E5%8E%86%E6%A8%A1%E6%9D%BF%E4%BB%A3%E7%A0%81"><span class="toc-number">1.2.</span> <span class="toc-text"> DFS (深度优先遍历) 模板代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%AD%E5%BA%8F%E9%81%8D%E5%8E%86%E9%9D%9E%E9%80%92%E5%BD%92%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.3.</span> <span class="toc-text"> 中序遍历非递归实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8E%E5%BA%8F%E9%81%8D%E5%8E%86%E9%9D%9E%E9%80%92%E5%BD%92"><span class="toc-number">1.4.</span> <span class="toc-text"> 后序遍历非递归</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#224-%E5%9F%BA%E6%9C%AC%E8%AE%A1%E7%AE%97%E5%99%A8"><span class="toc-number">1.4.1.</span> <span class="toc-text"> 224 基本计算器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91"><span class="toc-number">1.5.</span> <span class="toc-text"> 二叉搜索树</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%94%B1%E4%B8%80%E4%B8%AA%E9%80%92%E5%A2%9E%E5%BA%8F%E5%88%97%E6%9E%84%E5%BB%BA%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91"><span class="toc-number">1.5.0.1.</span> <span class="toc-text"> 由一个递增序列构建二叉搜索树</span></a></li></ol></li></ol></li></ol></li></ol>
+      </div>
+      <div class="related panel pjax" data-title="Related">
+      </div>
+      <div class="overview panel" data-title="Overview">
+        <div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="image" itemprop="image" alt="Luffy Xu"
+      data-src="/images/avatar.png">
+  <p class="name" itemprop="name">Luffy Xu</p>
+  <div class="description" itemprop="description">编程笔记 & 学渣的自救</div>
+</div>
+
+<nav class="state">
+    <div class="item posts">
+      <a href="/archives/">
+        <span class="count">31</span>
+        <span class="name">posts</span>
+      </a>
+    </div>
+    <div class="item tags">
+      <a href="/tags/">
+        <span class="count">33</span>
+        <span class="name">tags</span>
+      </a>
+    </div>
+</nav>
+
+<div class="social">
+      <span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWU=" title="https:&#x2F;&#x2F;github.com&#x2F;amehime"><i class="ic i-github"></i></span>
+      <span class="exturl item twitter" data-url="aHR0cHM6Ly90d2l0dGVyLmNvbS9hbWVoaW1l" title="https:&#x2F;&#x2F;twitter.com&#x2F;amehime"><i class="ic i-twitter"></i></span>
+      <span class="exturl item zhihu" data-url="aHR0cHM6Ly93d3cuemhpaHUuY29tL3Blb3BsZS9ydXJpc216aw==" title="https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;rurismzk"><i class="ic i-zhihu"></i></span>
+      <span class="exturl item music" data-url="aHR0cHM6Ly9tdXNpYy4xNjMuY29tLyMvdXNlci9ob21lP2lkPTEyODg2ODIz" title="https:&#x2F;&#x2F;music.163.com&#x2F;#&#x2F;user&#x2F;home?id&#x3D;12886823"><i class="ic i-cloud-music"></i></span>
+      <span class="exturl item weibo" data-url="aHR0cHM6Ly93ZWliby5jb20vYW1laGltZQ==" title="https:&#x2F;&#x2F;weibo.com&#x2F;amehime"><i class="ic i-weibo"></i></span>
+      <span class="exturl item about" data-url="aHR0cHM6Ly9hYm91dC5tZS9hbWVoaW1l" title="https:&#x2F;&#x2F;about.me&#x2F;amehime"><i class="ic i-address-card"></i></span>
+</div>
+
+<ul class="menu">
+  
+    
+  <li class="item">
+    <a href="/" rel="section"><i class="ic i-home"></i>Home</a>
+  </li>
+
+        
+  <li class="item dropdown">
+      <a href="javascript:void(0);"><i class="ic i-feather"></i>Posts</a>
+    <ul class="submenu">
+
+        
+  <li class="item">
+    <a href="/archives/" rel="section"><i class="ic i-list-alt"></i>Archives</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/categories/" rel="section"><i class="ic i-th"></i>Categories</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/tags/" rel="section"><i class="ic i-tags"></i>Tags</a>
+  </li>
+
+  </ul>
+    
+  <li class="item">
+    <a href="/friends/" rel="section"><i class="ic i-heart"></i>Friends</a>
+  </li>
+
+
+</ul>
+
+      </div>
+    </div>
+  </div>
+
+  <ul id="quick">
+    <li class="prev pjax">
+        <a href="/2022/03/31/Android-%E8%93%9D%E7%89%99%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B/" rel="prev" title="Previous Post"><i class="ic i-chevron-left"></i></a>
+    </li>
+    <li class="up"><i class="ic i-arrow-up"></i></li>
+    <li class="down"><i class="ic i-arrow-down"></i></li>
+    <li class="next pjax">
+        <a href="/2022/04/02/%E4%BA%91%E9%9B%80/" rel="next" title="Next Post"><i class="ic i-chevron-right"></i></a>
+    </li>
+    <li class="percent"></li>
+  </ul>
+</div>
+
+
+        </div>
+        <div class="dimmer"></div>
+      </div>
+    </main>
+    <footer id="footer">
+      <div class="inner">
+        <div class="widgets">
+          
+<div class="rpost pjax">
+  <h2>Random Posts</h2>
+  <ul>
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/03/26/ExoPlayer-%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%881%EF%BC%89/" title="ExoPlayer 源码解析（1）">ExoPlayer 源码解析（1）</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/06/20/Android-%E7%9B%B8%E6%9C%BA%E5%AD%90%E7%B3%BB%E7%BB%9F/" title="Android 相机子系统">Android 相机子系统</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2017/07/10/OpenGL-ES2-0%E4%B8%AD%E7%9A%84%E5%85%89%E7%85%A7/" title="OpenGL ES2.0中的光照">OpenGL ES2.0中的光照</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2017/06/11/%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/" title="希尔排序算法">希尔排序算法</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/04/07/%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/" title="贪心算法">贪心算法</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/05/25/Android-SharedPreference%E8%A7%A3%E6%9E%90/" title="Android SharedPreference解析">Android SharedPreference解析</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2023/04/25/Mac-M2%E6%9C%BA%E5%9E%8B%E5%BC%80%E5%8F%91%E9%97%AE%E9%A2%98/" title="Mac M2机型开发问题">Mac M2机型开发问题</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/08/05/Media%E6%9E%B6%E6%9E%84-%E9%9F%B3%E9%A2%91/" title="Media架构-音频">Media架构-音频</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/11/30/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%AE%97%E6%B3%95%E6%95%B4%E7%90%86/" title="二叉树算法整理">二叉树算法整理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2016/04/01/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/" title="快速排序算法">快速排序算法</a></span>
+  </li>
+
+  </ul>
+</div>
+<div>
+  <h2>Recent Comments</h2>
+  <ul class="leancloud-recent-comment"></ul>
+</div>
+
+        </div>
+        <div class="status">
+  <div class="copyright">
+    
+    &copy; 2010 – 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="ic i-sakura rotate"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Luffy Xu @ Hanasaku</span>
+  </div>
+  <div class="count">
+    <span class="post-meta-item-icon">
+      <i class="ic i-chart-area"></i>
+    </span>
+    <span title="Symbols count total">76k words</span>
+
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="ic i-coffee"></i>
+    </span>
+    <span title="Reading time total">1:09</span>
+  </div>
+  <div class="powered-by">
+    Powered by <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span>
+  </div>
+</div>
+
+      </div>
+    </footer>
+  </div>
+<script data-config type="text/javascript">
+  var LOCAL = {
+    path: '2022/04/02/树/',
+    favicon: {
+      show: "（●´3｀●）Goooood",
+      hide: "(´Д｀)Booooom"
+    },
+    search : {
+      placeholder: "Search for Posts",
+      empty: "We didn't find any results for the search: ${query}",
+      stats: "${hits} results found in ${time} ms"
+    },
+    valine: true,fancybox: true,
+    copyright: 'Copied to clipboard successfully! <br> All articles in this blog are licensed under <i class="ic i-creative-commons"></i>BY-NC-SA.',
+    ignores : [
+      function(uri) {
+        return uri.includes('#');
+      },
+      function(uri) {
+        return new RegExp(LOCAL.path+"$").test(uri);
+      }
+    ]
+  };
+</script>
+
+<script src="https://cdn.polyfill.io/v2/polyfill.js"></script>
+
+<script src="//cdn.jsdelivr.net/combine/npm/pace-js@1.0.2/pace.min.js,npm/pjax@0.2.8/pjax.min.js,npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js,npm/animejs@3.2.0/lib/anime.min.js,npm/algoliasearch@4/dist/algoliasearch-lite.umd.js,npm/instantsearch.js@4/dist/instantsearch.production.min.js,npm/lozad@1/dist/lozad.min.js,npm/quicklink@2/dist/quicklink.umd.js"></script>
+
+<script src="/js/app.js?v=0.2.5"></script>
+
+
+
+
+</body>
+</html>

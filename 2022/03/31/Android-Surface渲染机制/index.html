@@ -1,0 +1,560 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#FFF">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+<link rel="alternate" type="application/rss+xml" title="花咲く" href="http://example.com/rss.xml" />
+<link rel="alternate" type="application/atom+xml" title="花咲く" href="http://example.com/atom.xml" />
+<link rel="alternate" type="application/json" title="花咲く" href="http://example.com/feed.json" />
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Mulish:300,300italic,400,400italic,700,700italic%7CFredericka%20the%20Great:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20JP:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20SC:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="/css/app.css?v=0.2.5">
+
+  
+  <meta name="keywords" content="Android" />
+
+
+<link rel="canonical" href="http://example.com/2022/03/31/Android-Surface%E6%B8%B2%E6%9F%93%E6%9C%BA%E5%88%B6/">
+
+
+
+  <title>
+Android Surface渲染机制 |
+Hanasaku = 花咲く = blog</title>
+<meta name="generator" content="Hexo 6.1.0"></head>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div id="loading">
+    <div class="cat">
+      <div class="body"></div>
+      <div class="head">
+        <div class="face"></div>
+      </div>
+      <div class="foot">
+        <div class="tummy-end"></div>
+        <div class="bottom"></div>
+        <div class="legs left"></div>
+        <div class="legs right"></div>
+      </div>
+      <div class="paw">
+        <div class="hands left"></div>
+        <div class="hands right"></div>
+      </div>
+    </div>
+  </div>
+  <div id="container">
+    <header id="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="inner">
+        <div id="brand">
+          <div class="pjax">
+          
+  <h1 itemprop="name headline">Android Surface渲染机制
+  </h1>
+  
+<div class="meta">
+  <span class="item" title="Created: 2022-03-31 00:37:12">
+    <span class="icon">
+      <i class="ic i-calendar"></i>
+    </span>
+    <span class="text">Posted on</span>
+    <time itemprop="dateCreated datePublished" datetime="2022-03-31T00:37:12+08:00">2022-03-31</time>
+  </span>
+  <span class="item" title="Symbols count in article">
+    <span class="icon">
+      <i class="ic i-pen"></i>
+    </span>
+    <span class="text">Symbols count in article</span>
+    <span>7.8k</span>
+    <span class="text">words</span>
+  </span>
+  <span class="item" title="Reading time">
+    <span class="icon">
+      <i class="ic i-clock"></i>
+    </span>
+    <span class="text">Reading time</span>
+    <span>7 mins.</span>
+  </span>
+</div>
+
+
+          </div>
+        </div>
+        <nav id="nav">
+  <div class="inner">
+    <div class="toggle">
+      <div class="lines" aria-label="Toggle navigation bar">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </div>
+    <ul class="menu">
+      <li class="item title"><a href="/" rel="start">Hanasaku</a></li>
+    </ul>
+    <ul class="right">
+      <li class="item theme">
+        <i class="ic i-sun"></i>
+      </li>
+      <li class="item search">
+        <i class="ic i-search"></i>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+      </div>
+      <div id="imgs" class="pjax">
+        <ul>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1giciszlczyj20zk0m816d.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1giph4baakhj20zk0m8h5q.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gicitspjpbj20zk0m81ky.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gicitf0kl1j20zk0m87fe.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gicm0n457cj20zk0m8e81.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gicit4jrvuj20zk0m8785.jpg"></li>
+        </ul>
+      </div>
+    </header>
+    <div id="waves">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" />
+          <use xlink:href="#gentle-wave" x="48" y="3" />
+          <use xlink:href="#gentle-wave" x="48" y="5" />
+          <use xlink:href="#gentle-wave" x="48" y="7" />
+        </g>
+      </svg>
+    </div>
+    <main>
+      <div class="inner">
+        <div id="main" class="pjax">
+          
+  <div class="article wrap">
+    
+<div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<i class="ic i-home"></i>
+<span><a href="/">Home</a></span>
+</div>
+
+    <article itemscope itemtype="http://schema.org/Article" class="post block" lang="cn">
+  <link itemprop="mainEntityOfPage" href="http://example.com/2022/03/31/Android-Surface%E6%B8%B2%E6%9F%93%E6%9C%BA%E5%88%B6/">
+
+  <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="image" content="/images/avatar.png">
+    <meta itemprop="name" content="Luffy Xu">
+    <meta itemprop="description" content="blog, 编程笔记 & 学渣的自救">
+  </span>
+
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="花咲く">
+  </span>
+
+  <div class="body md" itemprop="articleBody">
+    
+
+    <p>Android Surface 的渲染机制</p>
+<h1 id="1surface是什么"><a class="anchor" href="#1surface是什么">#</a> 1.Surface 是什么？</h1>
+<p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">Handle onto a raw buffer that is being managed by the screen compositor.</span><br><span class="line">A Surface is generally created by or from a consumer of image buffers (such as a SurfaceTexture, android.media.MediaRecorder, or android.renderscript.Allocation), and is handed to some kind of producer (such as OpenGL, MediaPlayer, or CameraDevice) to draw into.</span><br><span class="line">Note: A Surface acts like a weak reference to the consumer it is associated with. By itself it will not keep its parent consumer from being reclaimed.</span><br></pre></td></tr></table></figure></p>
+<p>上面这段话是 Surface.java 这个类的注释，大致意思是：<br />
+Surface 是一个句柄，指向一个 raw buffer 缓冲对象，这个缓冲对象由 screen compositer 管理。Surface 通常由一个图像缓冲的消费者创建，例如 SurfaceTexture，MediaRecorder，Allocation。然后被送给各种消费者来绘制。</p>
+<h2 id="window创建流程"><a class="anchor" href="#window创建流程">#</a> window 创建流程</h2>
+<p>在 Activity 的启动过程中，<br />
+ActivityThread.handleLaunchActivity 中<br />
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">Override  </span><br><span class="line">public Activity handleLaunchActivity(ActivityClientRecord r,  </span><br><span class="line">        PendingTransactionActions pendingActions, Intent customIntent) &#123;</span><br><span class="line">	...</span><br><span class="line">	WindowManagerGlobal.initialize();</span><br><span class="line">	...</span><br><span class="line">	final Activity a = performLaunchActivity(r, customIntent);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">private Activity performLaunchActivity(ActivityClientRecord r, Intent customIntent) &#123;</span><br><span class="line">	...</span><br><span class="line">	ContextImpl appContext = createBaseContextForActivity(r);</span><br><span class="line">	...</span><br><span class="line">	Activity activity = null;</span><br><span class="line">	activity = mInstrumentation.newActivity(  </span><br><span class="line">        cl, component.getClassName(), r.intent);</span><br><span class="line">		</span><br><span class="line">	...</span><br><span class="line">	Application app = r.packageInfo.makeApplication(false, mInstrumentation);</span><br><span class="line">	...</span><br><span class="line">	activity.attach(appContext, this, getInstrumentation(), r.token,  </span><br><span class="line">        r.ident, app, r.intent, r.activityInfo, title, r.parent,  </span><br><span class="line">        r.embeddedID, r.lastNonConfigurationInstances, config,  </span><br><span class="line">        r.referrer, r.voiceInteractor, window, r.configCallback,  </span><br><span class="line">        r.assistToken, r.shareableActivityToken);</span><br><span class="line">		</span><br><span class="line">	...</span><br><span class="line">	mInstrumentation.callActivityOnCreate(activity, r.state);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br />
+ 在 Activity 的 attch 中，创建创建了 Window 对象。<br />
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">final void attach(Context context, ActivityThread aThread,  </span><br><span class="line">        Instrumentation instr, IBinder token, int ident,  </span><br><span class="line">        Application application, Intent intent, ActivityInfo info,  </span><br><span class="line">        CharSequence title, Activity parent, String id,  </span><br><span class="line">        NonConfigurationInstances lastNonConfigurationInstances,  </span><br><span class="line">        Configuration config, String referrer, IVoiceInteractor voiceInteractor,  </span><br><span class="line">        Window window, ActivityConfigCallback activityConfigCallback, IBinder assistToken,  </span><br><span class="line">        IBinder shareableActivityToken) &#123;</span><br><span class="line">	</span><br><span class="line">	attachBaseContext(context);  </span><br><span class="line">  </span><br><span class="line">	mFragments.attachHost(null /*parent*/);</span><br><span class="line">	...</span><br><span class="line">	mWindow = new PhoneWindow(this, window, activityConfigCallback);</span><br><span class="line">	...</span><br><span class="line">	mWindow.setWindowManager(  </span><br><span class="line">        (WindowManager)context.getSystemService(Context.WINDOW_SERVICE),  </span><br><span class="line">        mToken, mComponent.flattenToString(),  </span><br><span class="line">        (info.flags &amp; ActivityInfo.FLAG_HARDWARE_ACCELERATED) != 0);  </span><br><span class="line">	if (mParent != null) &#123;  </span><br><span class="line">    	mWindow.setContainer(mParent.getWindow());  </span><br><span class="line">	&#125;  </span><br><span class="line">	mWindowManager = mWindow.getWindowManager();</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br />
+Activity 中的 WindowManager 的初始化<br />
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">public void setWindowManager(WindowManager wm, IBinder appToken, String appName,  </span><br><span class="line">        boolean hardwareAccelerated) &#123;  </span><br><span class="line">    mAppToken = appToken;  </span><br><span class="line">    mAppName = appName;  </span><br><span class="line">    mHardwareAccelerated = hardwareAccelerated;  </span><br><span class="line">    if (wm == null) &#123;  </span><br><span class="line">        wm = (WindowManager)mContext.getSystemService(Context.WINDOW_SERVICE);  </span><br><span class="line">    &#125;  </span><br><span class="line">    mWindowManager = ((WindowManagerImpl)wm).createLocalWindowManager(this);  </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">//WindowManagerImpl.java</span><br><span class="line">public WindowManagerImpl createLocalWindowManager(Window parentWindow) &#123;  </span><br><span class="line">    Bridge.getLog().fidelityWarning(ILayoutLog.TAG_UNSUPPORTED,  </span><br><span class="line">            &quot;The preview does not support multiple windows.&quot;,  </span><br><span class="line">            null, null, null);  </span><br><span class="line">    return this;  </span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure><br />
+ActivityThread.handleResumeActivity 中<br />
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line">//ActivityThread.java</span><br><span class="line">public void handleResumeActivity(ActivityClientRecord r, boolean finalStateRequest,  </span><br><span class="line">        boolean isForward, String reason) &#123;</span><br><span class="line">	if (r.activity.mVisibleFromClient) &#123;  </span><br><span class="line">    	r.activity.makeVisible();  </span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">//Activity.java</span><br><span class="line">void makeVisible() &#123;  </span><br><span class="line">    if (!mWindowAdded) &#123;  </span><br><span class="line">        ViewManager wm = getWindowManager();  </span><br><span class="line">        wm.addView(mDecor, getWindow().getAttributes());  </span><br><span class="line">        mWindowAdded = true;  </span><br><span class="line">    &#125;  </span><br><span class="line">    mDecor.setVisibility(View.VISIBLE);  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br />
+ 会通过 <code>WindowManager.addView(View,Attributes)</code>  将 DecorView 添加到 Window 上。</p>
+<p>WindowManager 实现类是 WindowManagerImpl，他又将添加 View 的操作委托给了 WindowmanagerGlobal。</p>
+<p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">//WindowmanagerGlobal</span><br><span class="line">public void addView(View view, ViewGroup.LayoutParams params,  </span><br><span class="line">        Display display, Window parentWindow, int userId) &#123;</span><br><span class="line">	ViewRootImpl root = new ViewRootImpl(view.getContext(), display);</span><br><span class="line">	root.setView(view, wparams, panelParentView, userId);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">//ViewRootImpl</span><br><span class="line">public void setView(View view, WindowManager.LayoutParams attrs, View panelParentView,  </span><br><span class="line">        int userId) &#123;</span><br><span class="line">	//启动Choreographer的Vsync信号监听，</span><br><span class="line">	requestLayout();</span><br><span class="line">	//通过WindowSession请求wms，这里的WindowSession是一个binder接口。</span><br><span class="line">	es = mWindowSession.addToDisplayAsUser(mWindow, mWindowAttributes,  </span><br><span class="line">        getHostVisibility(), mDisplay.getDisplayId(), userId,  </span><br><span class="line">        mInsetsController.getRequestedVisibility(), inputChannel, mTempInsets,  </span><br><span class="line">        mTempControls);</span><br><span class="line">		</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">//WindowSession初始化</span><br><span class="line">public static IWindowSession getWindowSession() &#123;  </span><br><span class="line">    synchronized (WindowManagerGlobal.class) &#123;  </span><br><span class="line">        if (sWindowSession == null) &#123;  </span><br><span class="line">            try &#123;  </span><br><span class="line">                // Emulate the legacy behavior.  The global instance of InputMethodManager  </span><br><span class="line"> // was instantiated here. // TODO(b/116157766): Remove this hack after cleaning up @UnsupportedAppUsage InputMethodManager.ensureDefaultInstanceForDefaultDisplayIfNecessary();  </span><br><span class="line">                IWindowManager windowManager = getWindowManagerService();  </span><br><span class="line">                sWindowSession = windowManager.openSession(  </span><br><span class="line">                        new IWindowSessionCallback.Stub() &#123;  </span><br><span class="line">                            @Override  </span><br><span class="line"> public void onAnimatorScaleChanged(float scale) &#123;  </span><br><span class="line">                                ValueAnimator.setDurationScale(scale);  </span><br><span class="line">                            &#125;  </span><br><span class="line">                        &#125;);  </span><br><span class="line">            &#125; catch (RemoteException e) &#123;  </span><br><span class="line">                throw e.rethrowFromSystemServer();  </span><br><span class="line">            &#125;  </span><br><span class="line">        &#125;  </span><br><span class="line">        return sWindowSession;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br />
+ 从这里进入了 system_server 中的 WMS 进行执行<br />
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">//Session.java   Session是IWindowSession这个AIDL接口的实现类，是应用与WMS进行交互的接口</span><br><span class="line">@Override  </span><br><span class="line">public int addToDisplay(IWindow window, WindowManager.LayoutParams attrs,  </span><br><span class="line">        int viewVisibility, int displayId, InsetsState requestedVisibility,  </span><br><span class="line">        InputChannel outInputChannel, InsetsState outInsetsState,  </span><br><span class="line">        InsetsSourceControl[] outActiveControls) &#123;  </span><br><span class="line">    return mService.addWindow(this, window, attrs, viewVisibility, displayId,  </span><br><span class="line">            UserHandle.getUserId(mUid), requestedVisibility, outInputChannel, outInsetsState,  </span><br><span class="line">            outActiveControls);  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br />
+ 最后进入了 WindowManagerService 中执行：</p>
+<h2 id="surface的创建"><a class="anchor" href="#surface的创建">#</a> Surface 的创建</h2>
+<p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">//1.WindowManagerService.addWindow()</span><br><span class="line">public int addWindow(Session session, IWindow client, LayoutParams attrs, int viewVisibility,  </span><br><span class="line">        int displayId, int requestUserId, InsetsState requestedVisibility,  </span><br><span class="line">        InputChannel outInputChannel, InsetsState outInsetsState,  </span><br><span class="line">        InsetsSourceControl[] outActiveControls) &#123;</span><br><span class="line">	final DisplayContent displayContent = getDisplayContentOrCreate(displayId, attrs.token);</span><br><span class="line">	WindowToken token = displayContent.getWindowToken(  </span><br><span class="line">        hasParent ? parentWindow.mAttrs.token : attrs.token);</span><br><span class="line">	if (token == null) &#123;</span><br><span class="line">		token = new WindowToken.Builder(this, binder, type)  </span><br><span class="line">        .setDisplayContent(displayContent)  </span><br><span class="line">        .setOwnerCanManageAppTokens(session.mCanAddInternalSystemWindow)  </span><br><span class="line">        .setRoundedCornerOverlay(isRoundedCornerOverlay)  </span><br><span class="line">        .build();</span><br><span class="line">	&#125;</span><br><span class="line">	final WindowState win = new WindowState(this, session, client, token, parentWindow,  </span><br><span class="line">        appOp[0], attrs, viewVisibility, session.mUid, userId,  </span><br><span class="line">        session.mCanAddInternalSystemWindow);</span><br><span class="line">		</span><br><span class="line">	...</span><br><span class="line">	win.attach();</span><br><span class="line">	</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//2.WindowSession.attach()</span><br><span class="line">void attach() &#123;  </span><br><span class="line">    mSession.windowAddedLocked();  </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//3.Session.windowAddedLocked()</span><br><span class="line"> void windowAddedLocked()&#123;</span><br><span class="line"> 	...</span><br><span class="line"> 	mSurfaceSession = new SurfaceSession();</span><br><span class="line"> 	...</span><br><span class="line"> &#125;</span><br><span class="line"> </span><br><span class="line"> //4.SurfaceSession</span><br><span class="line"> public SurfaceSession() &#123;  </span><br><span class="line">    mNativeClient = nativeCreate();  </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">5.android_view_SurfaceSession.nativeCreate()</span><br><span class="line">static jlong nativeCreate()&#123;</span><br><span class="line">	SurfaceClientComposer* client = new SurfaceClientComposer();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="surface上屏流程"><a class="anchor" href="#surface上屏流程">#</a> Surface 上屏流程</h2>
+<p>1.Android 发送了 Vsync 垂直同步脉冲信号</p>
+<p>-&gt; DisplaySync<br />
+-&gt;Choreographer 接收到 Vsync-app 信号<br />
+ -&gt;Choreographer 回调 doFrame<br />
+-&gt;ViewRootImpl 执行 scheduleTravesals, 同时发送一个同步屏障<br />
+ -&gt; 取消同步屏障，执行 performTravesals<br />
+-&gt;performMeasure(),performLayout(),performDraw()<br />
+-&gt; 申请 BufferQueue 中的图像缓冲区对象<br />
+ -&gt;RenderThread 发送 OpenGL 命令<br />
+ -&gt;queueBuffer</p>
+<p>-&gt;DisplaySync<br />
+-&gt;SurfaceFlinger 收到 Vsync-sf<br />
+-&gt; 释放上一次获取 buffer 缓冲区对象<br />
+ -&gt;onMessageReceive (INVALIDATE)   判断当前是否有 Layer 状态发生变化，BufferQueue 中是否有新数据<br />
+ -&gt;onMessageReceive (REFRESH)  获取了 LAYER 后，将 buffer 发送给 HWC 进行合成图层<br />
+ -&gt; 图层合成后通过 drm 将帧送显上屏<br />
+ -&gt;HWC 归还 buffer 给 surfaceFlinger，待下一次 Vsync-sf 时 release 这次的 buffer。</p>
+
+      <div class="tags">
+          <a href="/tags/Android/" rel="tag"><i class="ic i-tag"></i> Android</a>
+      </div>
+  </div>
+
+   <footer>
+
+    <div class="meta">
+  <span class="item">
+    <span class="icon">
+      <i class="ic i-calendar-check"></i>
+    </span>
+    <span class="text">Edited on</span>
+    <time title="Modified: 2023-04-24 21:19:10" itemprop="dateModified" datetime="2023-04-24T21:19:10+08:00">2023-04-24</time>
+  </span>
+  <span id="2022/03/31/Android-Surface渲染机制/" class="item leancloud_visitors" data-flag-title="Android Surface渲染机制" title="Views">
+      <span class="icon">
+        <i class="ic i-eye"></i>
+      </span>
+      <span class="text">Views</span>
+      <span class="leancloud-visitors-count"></span>
+      <span class="text">times</span>
+  </span>
+</div>
+
+      
+
+<div id="copyright">
+<ul>
+  <li class="author">
+    <strong>Post author:  </strong>Luffy Xu <i class="ic i-at"><em>@</em></i>花咲く
+  </li>
+  <li class="link">
+    <strong>Post link: </strong>
+    <a href="http://example.com/2022/03/31/Android-Surface%E6%B8%B2%E6%9F%93%E6%9C%BA%E5%88%B6/" title="Android Surface渲染机制">http://example.com/2022/03/31/Android-Surface渲染机制/</a>
+  </li>
+  <li class="license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+  </footer>
+
+</article>
+
+  </div>
+  
+
+<div class="post-nav">
+    <div class="item left">
+      
+
+  <a href="/2022/03/30/Android%E7%B3%BB%E7%BB%9F%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva2.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gicm0n457cj20zk0m8e81.jpg" title="Android系统启动流程">
+  <span class="type">Previous Post</span>
+  <span class="category"><i class="ic i-flag"></i> </span>
+  <h3>Android系统启动流程</h3>
+  </a>
+
+    </div>
+    <div class="item right">
+      
+
+  <a href="/2022/03/31/Android-%E8%93%9D%E7%89%99%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tva2.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1giclfdu6exj20zk0m87hw.jpg" title="Android 蓝牙应用开发流程">
+  <span class="type">Next Post</span>
+  <span class="category"><i class="ic i-flag"></i> </span>
+  <h3>Android 蓝牙应用开发流程</h3>
+  </a>
+
+    </div>
+</div>
+
+  
+  <div class="wrap" id="comments"></div>
+
+
+        </div>
+        <div id="sidebar">
+          
+
+<div class="inner">
+
+  <div class="panels">
+    <div class="inner">
+      <div class="contents panel pjax" data-title="Contents">
+          <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#1surface%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">1.</span> <span class="toc-text"> 1.Surface 是什么？</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#window%E5%88%9B%E5%BB%BA%E6%B5%81%E7%A8%8B"><span class="toc-number">1.1.</span> <span class="toc-text"> window 创建流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#surface%E7%9A%84%E5%88%9B%E5%BB%BA"><span class="toc-number">1.2.</span> <span class="toc-text"> Surface 的创建</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#surface%E4%B8%8A%E5%B1%8F%E6%B5%81%E7%A8%8B"><span class="toc-number">1.3.</span> <span class="toc-text"> Surface 上屏流程</span></a></li></ol></li></ol>
+      </div>
+      <div class="related panel pjax" data-title="Related">
+      </div>
+      <div class="overview panel" data-title="Overview">
+        <div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="image" itemprop="image" alt="Luffy Xu"
+      data-src="/images/avatar.png">
+  <p class="name" itemprop="name">Luffy Xu</p>
+  <div class="description" itemprop="description">编程笔记 & 学渣的自救</div>
+</div>
+
+<nav class="state">
+    <div class="item posts">
+      <a href="/archives/">
+        <span class="count">31</span>
+        <span class="name">posts</span>
+      </a>
+    </div>
+    <div class="item tags">
+      <a href="/tags/">
+        <span class="count">33</span>
+        <span class="name">tags</span>
+      </a>
+    </div>
+</nav>
+
+<div class="social">
+      <span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWU=" title="https:&#x2F;&#x2F;github.com&#x2F;amehime"><i class="ic i-github"></i></span>
+      <span class="exturl item twitter" data-url="aHR0cHM6Ly90d2l0dGVyLmNvbS9hbWVoaW1l" title="https:&#x2F;&#x2F;twitter.com&#x2F;amehime"><i class="ic i-twitter"></i></span>
+      <span class="exturl item zhihu" data-url="aHR0cHM6Ly93d3cuemhpaHUuY29tL3Blb3BsZS9ydXJpc216aw==" title="https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;rurismzk"><i class="ic i-zhihu"></i></span>
+      <span class="exturl item music" data-url="aHR0cHM6Ly9tdXNpYy4xNjMuY29tLyMvdXNlci9ob21lP2lkPTEyODg2ODIz" title="https:&#x2F;&#x2F;music.163.com&#x2F;#&#x2F;user&#x2F;home?id&#x3D;12886823"><i class="ic i-cloud-music"></i></span>
+      <span class="exturl item weibo" data-url="aHR0cHM6Ly93ZWliby5jb20vYW1laGltZQ==" title="https:&#x2F;&#x2F;weibo.com&#x2F;amehime"><i class="ic i-weibo"></i></span>
+      <span class="exturl item about" data-url="aHR0cHM6Ly9hYm91dC5tZS9hbWVoaW1l" title="https:&#x2F;&#x2F;about.me&#x2F;amehime"><i class="ic i-address-card"></i></span>
+</div>
+
+<ul class="menu">
+  
+    
+  <li class="item">
+    <a href="/" rel="section"><i class="ic i-home"></i>Home</a>
+  </li>
+
+        
+  <li class="item dropdown">
+      <a href="javascript:void(0);"><i class="ic i-feather"></i>Posts</a>
+    <ul class="submenu">
+
+        
+  <li class="item">
+    <a href="/archives/" rel="section"><i class="ic i-list-alt"></i>Archives</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/categories/" rel="section"><i class="ic i-th"></i>Categories</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/tags/" rel="section"><i class="ic i-tags"></i>Tags</a>
+  </li>
+
+  </ul>
+    
+  <li class="item">
+    <a href="/friends/" rel="section"><i class="ic i-heart"></i>Friends</a>
+  </li>
+
+
+</ul>
+
+      </div>
+    </div>
+  </div>
+
+  <ul id="quick">
+    <li class="prev pjax">
+        <a href="/2022/03/30/Android%E7%B3%BB%E7%BB%9F%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/" rel="prev" title="Previous Post"><i class="ic i-chevron-left"></i></a>
+    </li>
+    <li class="up"><i class="ic i-arrow-up"></i></li>
+    <li class="down"><i class="ic i-arrow-down"></i></li>
+    <li class="next pjax">
+        <a href="/2022/03/31/Android-%E8%93%9D%E7%89%99%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B/" rel="next" title="Next Post"><i class="ic i-chevron-right"></i></a>
+    </li>
+    <li class="percent"></li>
+  </ul>
+</div>
+
+
+        </div>
+        <div class="dimmer"></div>
+      </div>
+    </main>
+    <footer id="footer">
+      <div class="inner">
+        <div class="widgets">
+          
+<div class="rpost pjax">
+  <h2>Random Posts</h2>
+  <ul>
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2017/06/11/%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/" title="希尔排序算法">希尔排序算法</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/11/30/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%AE%97%E6%B3%95%E6%95%B4%E7%90%86/" title="二叉树算法整理">二叉树算法整理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2019/03/28/LeetCode-17/" title="LeetCode 17">LeetCode 17</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2017/07/10/OpenGL-ES2-0%E4%B8%AD%E7%9A%84%E5%85%89%E7%85%A7/" title="OpenGL ES2.0中的光照">OpenGL ES2.0中的光照</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/05/29/FFmpeg%E4%B9%8B%E9%9F%B3%E8%A7%86%E9%A2%91%E5%90%8C%E6%AD%A5/" title="FFmpeg之音视频同步">FFmpeg之音视频同步</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/04/15/OpenGL-ES3-0-%E5%85%A5%E9%97%A8-%E7%94%BB%E4%B8%89%E8%A7%92%E5%BD%A2/" title="OpenGL ES3.0 入门-画三角形">OpenGL ES3.0 入门-画三角形</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/04/02/Android-%E6%BA%90%E7%A0%81%E4%B8%AD-C-%E7%9F%A5%E8%AF%86%E7%82%B9/" title="Android 源码中 C++ 知识点">Android 源码中 C++ 知识点</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/04/02/%E4%BA%91%E9%9B%80/" title="云雀">云雀</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/03/31/Android-Surface%E6%B8%B2%E6%9F%93%E6%9C%BA%E5%88%B6/" title="Android Surface渲染机制">Android Surface渲染机制</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/03/31/Android-%E8%93%9D%E7%89%99%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B/" title="Android 蓝牙应用开发流程">Android 蓝牙应用开发流程</a></span>
+  </li>
+
+  </ul>
+</div>
+<div>
+  <h2>Recent Comments</h2>
+  <ul class="leancloud-recent-comment"></ul>
+</div>
+
+        </div>
+        <div class="status">
+  <div class="copyright">
+    
+    &copy; 2010 – 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="ic i-sakura rotate"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Luffy Xu @ Hanasaku</span>
+  </div>
+  <div class="count">
+    <span class="post-meta-item-icon">
+      <i class="ic i-chart-area"></i>
+    </span>
+    <span title="Symbols count total">76k words</span>
+
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="ic i-coffee"></i>
+    </span>
+    <span title="Reading time total">1:09</span>
+  </div>
+  <div class="powered-by">
+    Powered by <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span>
+  </div>
+</div>
+
+      </div>
+    </footer>
+  </div>
+<script data-config type="text/javascript">
+  var LOCAL = {
+    path: '2022/03/31/Android-Surface渲染机制/',
+    favicon: {
+      show: "（●´3｀●）Goooood",
+      hide: "(´Д｀)Booooom"
+    },
+    search : {
+      placeholder: "Search for Posts",
+      empty: "We didn't find any results for the search: ${query}",
+      stats: "${hits} results found in ${time} ms"
+    },
+    valine: true,fancybox: true,
+    copyright: 'Copied to clipboard successfully! <br> All articles in this blog are licensed under <i class="ic i-creative-commons"></i>BY-NC-SA.',
+    ignores : [
+      function(uri) {
+        return uri.includes('#');
+      },
+      function(uri) {
+        return new RegExp(LOCAL.path+"$").test(uri);
+      }
+    ]
+  };
+</script>
+
+<script src="https://cdn.polyfill.io/v2/polyfill.js"></script>
+
+<script src="//cdn.jsdelivr.net/combine/npm/pace-js@1.0.2/pace.min.js,npm/pjax@0.2.8/pjax.min.js,npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js,npm/animejs@3.2.0/lib/anime.min.js,npm/algoliasearch@4/dist/algoliasearch-lite.umd.js,npm/instantsearch.js@4/dist/instantsearch.production.min.js,npm/lozad@1/dist/lozad.min.js,npm/quicklink@2/dist/quicklink.umd.js"></script>
+
+<script src="/js/app.js?v=0.2.5"></script>
+
+
+
+
+</body>
+</html>

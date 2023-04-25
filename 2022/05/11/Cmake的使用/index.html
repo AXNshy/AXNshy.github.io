@@ -1,0 +1,555 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#FFF">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+<link rel="alternate" type="application/rss+xml" title="花咲く" href="http://example.com/rss.xml" />
+<link rel="alternate" type="application/atom+xml" title="花咲く" href="http://example.com/atom.xml" />
+<link rel="alternate" type="application/json" title="花咲く" href="http://example.com/feed.json" />
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Mulish:300,300italic,400,400italic,700,700italic%7CFredericka%20the%20Great:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20JP:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20SC:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="/css/app.css?v=0.2.5">
+
+  
+  <meta name="keywords" content="Android,Cmake" />
+
+
+<link rel="canonical" href="http://example.com/2022/05/11/Cmake%E7%9A%84%E4%BD%BF%E7%94%A8/">
+
+
+
+  <title>
+Cmake的使用 |
+Hanasaku = 花咲く = blog</title>
+<meta name="generator" content="Hexo 6.1.0"></head>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div id="loading">
+    <div class="cat">
+      <div class="body"></div>
+      <div class="head">
+        <div class="face"></div>
+      </div>
+      <div class="foot">
+        <div class="tummy-end"></div>
+        <div class="bottom"></div>
+        <div class="legs left"></div>
+        <div class="legs right"></div>
+      </div>
+      <div class="paw">
+        <div class="hands left"></div>
+        <div class="hands right"></div>
+      </div>
+    </div>
+  </div>
+  <div id="container">
+    <header id="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="inner">
+        <div id="brand">
+          <div class="pjax">
+          
+  <h1 itemprop="name headline">Cmake的使用
+  </h1>
+  
+<div class="meta">
+  <span class="item" title="Created: 2022-05-11 00:00:53">
+    <span class="icon">
+      <i class="ic i-calendar"></i>
+    </span>
+    <span class="text">Posted on</span>
+    <time itemprop="dateCreated datePublished" datetime="2022-05-11T00:00:53+08:00">2022-05-11</time>
+  </span>
+  <span class="item" title="Symbols count in article">
+    <span class="icon">
+      <i class="ic i-pen"></i>
+    </span>
+    <span class="text">Symbols count in article</span>
+    <span>3.6k</span>
+    <span class="text">words</span>
+  </span>
+  <span class="item" title="Reading time">
+    <span class="icon">
+      <i class="ic i-clock"></i>
+    </span>
+    <span class="text">Reading time</span>
+    <span>3 mins.</span>
+  </span>
+</div>
+
+
+          </div>
+        </div>
+        <nav id="nav">
+  <div class="inner">
+    <div class="toggle">
+      <div class="lines" aria-label="Toggle navigation bar">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </div>
+    <ul class="menu">
+      <li class="item title"><a href="/" rel="start">Hanasaku</a></li>
+    </ul>
+    <ul class="right">
+      <li class="item theme">
+        <i class="ic i-sun"></i>
+      </li>
+      <li class="item search">
+        <i class="ic i-search"></i>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+      </div>
+      <div id="imgs" class="pjax">
+        <ul>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gicitcxhpij20zk0m8hdt.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gicis081o9j20zk0m8dmr.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1giclize41wj20zk0m87gk.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1giclil3m4ej20zk0m8tn8.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gipex2cdtbj20zk0m8x6p.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gicit4jrvuj20zk0m8785.jpg"></li>
+        </ul>
+      </div>
+    </header>
+    <div id="waves">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" />
+          <use xlink:href="#gentle-wave" x="48" y="3" />
+          <use xlink:href="#gentle-wave" x="48" y="5" />
+          <use xlink:href="#gentle-wave" x="48" y="7" />
+        </g>
+      </svg>
+    </div>
+    <main>
+      <div class="inner">
+        <div id="main" class="pjax">
+          
+  <div class="article wrap">
+    
+<div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<i class="ic i-home"></i>
+<span><a href="/">Home</a></span>
+</div>
+
+    <article itemscope itemtype="http://schema.org/Article" class="post block" lang="cn">
+  <link itemprop="mainEntityOfPage" href="http://example.com/2022/05/11/Cmake%E7%9A%84%E4%BD%BF%E7%94%A8/">
+
+  <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="image" content="/images/avatar.png">
+    <meta itemprop="name" content="Luffy Xu">
+    <meta itemprop="description" content="blog, 编程笔记 & 学渣的自救">
+  </span>
+
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="花咲く">
+  </span>
+
+  <div class="body md" itemprop="articleBody">
+    
+
+    <p>在 Android Studio 中使用 Cmake 来构建 C,C++ 应用</p>
+<p>今天尝试了学习使用 ffmpeg 来编写播放器，需要使用 C,C++ 来编写代码，所有学习一下 Cmake 的使用。</p>
+<p>Cmake 是一个开源，跨平台的工具，被用来构建、测试、打包软件。Cmake 使用了简单的和平台、编译器无关的配置文件，来生成当前平台的软件、链接库。</p>
+<h2 id="用法"><a class="anchor" href="#用法">#</a> 用法</h2>
+<p>举个栗子：<br />
+我有一个 jni 接口，Java 层调用这个接口，返回一个字符串 <code>hello Cmake</code></p>
+<p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">libnative2/src/main/cpp/nativelib.cpp</span><br><span class="line"></span><br><span class="line">#include &lt;jni.h&gt;  </span><br><span class="line">#include &lt;string&gt;  </span><br><span class="line">  </span><br><span class="line">extern &quot;C&quot; JNIEXPORT jstring JNICALL  </span><br><span class="line">Java_com_xzq_nativelib2_NativeLib_stringFromJNI(  </span><br><span class="line">        JNIEnv* env,  </span><br><span class="line">        jobject /* this */) &#123;  </span><br><span class="line">    std::string hello = &quot;hello Cmake&quot;;  </span><br><span class="line">    return env-&gt;NewStringUTF(hello.c_str());  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure><br />
+ 这个 cpp 文件对应的 java 类是 com/xzq/nativelib2/NativeLib.kt 这个类</p>
+<p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">libnative2/src/main/kotlin/com/xzq/nativelib2/NativeLib.kt</span><br><span class="line"></span><br><span class="line">package com.xzq.nativelib2  </span><br><span class="line">  </span><br><span class="line">class NativeLib &#123;  </span><br><span class="line">  	//external对应的是Java中的native方法</span><br><span class="line">	external fun stringFromJNI(): String  </span><br><span class="line">  </span><br><span class="line">    companion object &#123;  </span><br><span class="line">        // Used to load the &#x27;nativelib2&#x27; library on application startup.  </span><br><span class="line">        init &#123;</span><br><span class="line">			//它会去加载名为libnativelib2.so的动态库文件</span><br><span class="line">            System.loadLibrary(&quot;nativelib2&quot;)  </span><br><span class="line">        &#125;  </span><br><span class="line">    &#125;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我想要将这个 cpp 编译成 so 文件 <code>libnativelib2.so</code> ，在 app 模块中 MainActivity 中去调用 NativeLib 接口去访问本地 cpp 代码。</p>
+<p>Cmake 有两种用法：gradle 配置和命令行</p>
+<h3 id="1gradle配置"><a class="anchor" href="#1gradle配置">#</a> 1.gradle 配置</h3>
+<p>CMake 可以通过 android build tool 脚本进行配置，在启动 gradle 构建后自动生成对应的文件。</p>
+<p>1. 在 <code>android</code>  配置块中将 gradle 链接到你的 CMake 脚本<br />
+ 2. 在 <code>defaultConfig</code>  配置块中可以指定 CMake 可选的参数 (args) 和标记 (flags)<br />
+ 3. 在 <code>productFlavor</code>  中针对不同产品来替换对应属性</p>
+<p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">plugins &#123;  </span><br><span class="line">    id &#x27;com.android.library&#x27;  </span><br><span class="line">    or</span><br><span class="line">	id &#x27;com.android.application&#x27;  </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">android &#123;  ...  </span><br><span class="line">	defaultConfig &#123;</span><br><span class="line">		...</span><br><span class="line">		</span><br><span class="line">	&#125;  </span><br><span class="line">	buildTypes &#123;...&#125;  </span><br><span class="line">	</span><br><span class="line">	productFlavors &#123;    </span><br><span class="line">		...    </span><br><span class="line">		create(&quot;demo&quot;) &#123; </span><br><span class="line">			...</span><br><span class="line">			externalNativeBuild &#123;</span><br><span class="line">				cmake &#123;     </span><br><span class="line">					... </span><br><span class="line">					// 指定gradle只编译target指定的模块。如果不指定target，那么CMake配置中的所有模块都会被进行编译和打包。</span><br><span class="line">					targets += listOf(&quot;native-lib-demo&quot;,                 </span><br><span class="line">				     //可执行文件是可选的，一般情况，仅编译动态库文件能满足要求。	</span><br><span class="line">					&quot;my-executible-demo&quot;)       </span><br><span class="line">				&#125;      </span><br><span class="line">			&#125;   </span><br><span class="line">		&#125;    </span><br><span class="line">		create(&quot;paid&quot;) &#123;     </span><br><span class="line">			... </span><br><span class="line">			externalNativeBuild &#123; </span><br><span class="line">				cmake &#123;     </span><br><span class="line">					... </span><br><span class="line">					targets += listOf(&quot;native-lib-paid&quot;,      </span><br><span class="line">					&quot;my-executible-paid&quot;)     </span><br><span class="line">				&#125;     </span><br><span class="line">			&#125;   </span><br><span class="line">		&#125;  </span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	// 本地编译配置，可以配置ndk-bundle和CMake</span><br><span class="line">	externalNativeBuild &#123;    </span><br><span class="line">		//CMake编译配置    </span><br><span class="line">		cmake &#123;   </span><br><span class="line">			//指定CMakeLists.txt文件路径</span><br><span class="line">			path = file(&quot;CMakeLists.txt&quot;)    </span><br><span class="line">		&#125;  </span><br><span class="line">	&#125;  </span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<h3 id="2命令行"><a class="anchor" href="#2命令行">#</a> 2. 命令行</h3>
+<p>使用命令行方式编译本地代码，<br />
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ cmake \</span><br><span class="line">-DCMAKE_TOOLCHAIN_FILE=$NDK/build/cmake/android.toolchain.cmake \    </span><br><span class="line">-DANDROID_ABI=$ABI \    </span><br><span class="line">-DANDROID_PLATFORM=android-$MINSDKVERSION \    </span><br><span class="line">$OTHER_ARGS</span><br></pre></td></tr></table></figure></p>
+<p>上面命令行中几个参数的含义：</p>
+<ul>
+<li>-DCMAKE_TOLLCHAIN_FILE=$NDK/build/cmake/android.toolchain.cmake   指定 ndk 中 CMake 编译工具链文件地址</li>
+<li>-DANDROID_ABI=$ABI   指定目标平台的应用程序二进制接口    2022 年 最常见的应该是 arm64-v8a</li>
+<li>-DANDROID_PLATFORM=android-$MINSDKVERSION  指定应用或库支持的最低 Android 平台版本，例如 android-31,android-29</li>
+</ul>
+<p>还有更多的参数可以参考<span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIuYW5kcm9pZC5nb29nbGUuY24vbmRrL2d1aWRlcy9jbWFrZT9obD16aC1jbiNjb21tYW5kLWxpbmVfMg=="> Android 指南 - CMake</span></p>
+<h2 id="cmakeliststxt-配置文件编写"><a class="anchor" href="#cmakeliststxt-配置文件编写">#</a> CMakeLists.txt 配置文件编写</h2>
+<p>CMake 的执行已经知道了，但是我们没讲到如何将 cpp 文件编译成可执行文件或是库文件，CMakeLists.txt 就是用来告诉 CMake, 要如何编译，按照什么规则进行编译，编译需要使用的依赖项目，好像很类似与 Makefile 文件。下面是一个栗子：<br />
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">#指定了Cmake的最小支持版本</span><br><span class="line">cmake_minimum_required(VERSION 3.10.2)  </span><br><span class="line">  </span><br><span class="line">#设置这个Cmake项目名，可以通过变量PROJECT_NAME进行访问</span><br><span class="line">  </span><br><span class="line">project(&quot;nativelib2&quot;)  </span><br><span class="line">  </span><br><span class="line">#创建并命名一个库</span><br><span class="line">add_library( </span><br><span class="line">		# 设置这个库的名称  </span><br><span class="line">        nativelib2  </span><br><span class="line">  </span><br><span class="line">        # 这个生成的库的类型，静态库，动态库等 </span><br><span class="line">        SHARED  </span><br><span class="line">  </span><br><span class="line">        # 指定库的源文件相对路径，当在cpp中新增了文件中，需要在这个进行声明，cmake才会将新文件打包进库中。除了可以指定cpp源文件，还可以指定库文件路径</span><br><span class="line">        nativelib2.cpp)  </span><br><span class="line">  </span><br><span class="line"># 搜索ndk环境中的库并自定义命名路径变量</span><br><span class="line">find_library( </span><br><span class="line">		# 定义变量log-lib存储log这个库的路径</span><br><span class="line">        log-lib  </span><br><span class="line">  </span><br><span class="line">        # 指定ndk环境中库的名称     </span><br><span class="line">		log)  </span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">#指定所有需要被链接到目标库的库名称  </span><br><span class="line">target_link_libraries(</span><br><span class="line">		# 目标库</span><br><span class="line">        nativelib2  </span><br><span class="line">  		</span><br><span class="line">		#被链接的库，可以新增多个库名称</span><br><span class="line">		</span><br><span class="line">     	$&#123;log-lib&#125;)</span><br><span class="line">		</span><br></pre></td></tr></table></figure></p>
+<p>配置好了之后，我们直接使用 Android Studio 编译安装 apk，打开 app，能看到打印成功<br />
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">2022-05-11 01:25:51.546 20065-20065/com.luffy.mulmedia D/NavigationActivity: stringFromJNI2 hello Cmake</span><br></pre></td></tr></table></figure></p>
+<h2 id="注意事项"><a class="anchor" href="#注意事项">#</a> 注意事项</h2>
+<p>我在学习过程中发现，如果 Android Studio 项目存在多个模块，如果有一个模块需要设置 cmake 的 abiFilter  为 armeabi-v7a，那么每一个模块都要设置 abiFilter，不然就会存在找不到 so 的情况。<br />
+我猜测，可能是因为如果某个模块不设置，那么就会在最终的 apk 的 jniLibs 中创建默认的 arm64-v8a 文件夹，然后运行中，发现了有 arm64-v8a 的文件夹，那么就只会在这个路径下搜索全部的 so 文件；又由于其他指定了 abiFilter 的模块会编译出指定的 armeabi-v7a 架构的文件，所有在 arm64-v8a 中找不到，最终抛出异常。如果有大佬知道原因的话可以告诉我一下。</p>
+
+      <div class="tags">
+          <a href="/tags/Android/" rel="tag"><i class="ic i-tag"></i> Android</a>
+          <a href="/tags/Cmake/" rel="tag"><i class="ic i-tag"></i> Cmake</a>
+      </div>
+  </div>
+
+   <footer>
+
+    <div class="meta">
+  <span class="item">
+    <span class="icon">
+      <i class="ic i-calendar-check"></i>
+    </span>
+    <span class="text">Edited on</span>
+    <time title="Modified: 2023-04-24 21:19:10" itemprop="dateModified" datetime="2023-04-24T21:19:10+08:00">2023-04-24</time>
+  </span>
+  <span id="2022/05/11/Cmake的使用/" class="item leancloud_visitors" data-flag-title="Cmake的使用" title="Views">
+      <span class="icon">
+        <i class="ic i-eye"></i>
+      </span>
+      <span class="text">Views</span>
+      <span class="leancloud-visitors-count"></span>
+      <span class="text">times</span>
+  </span>
+</div>
+
+      
+
+<div id="copyright">
+<ul>
+  <li class="author">
+    <strong>Post author:  </strong>Luffy Xu <i class="ic i-at"><em>@</em></i>花咲く
+  </li>
+  <li class="link">
+    <strong>Post link: </strong>
+    <a href="http://example.com/2022/05/11/Cmake%E7%9A%84%E4%BD%BF%E7%94%A8/" title="Cmake的使用">http://example.com/2022/05/11/Cmake的使用/</a>
+  </li>
+  <li class="license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+  </footer>
+
+</article>
+
+  </div>
+  
+
+<div class="post-nav">
+    <div class="item left">
+      
+
+  <a href="/2022/04/23/%E6%95%B0%E5%AD%97%E7%9A%84%E7%BF%BB%E8%BD%AC/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva2.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gipeu1usa7j20zk0m8b29.jpg" title="数字的翻转">
+  <span class="type">Previous Post</span>
+  <span class="category"><i class="ic i-flag"></i> </span>
+  <h3>数字的翻转</h3>
+  </a>
+
+    </div>
+    <div class="item right">
+      
+
+  <a href="/2022/05/22/OpenSLES%E7%AE%80%E4%BB%8B/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tva2.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1giclj61ylzj20zk0m8b29.jpg" title="OpenSLES">
+  <span class="type">Next Post</span>
+  <span class="category"><i class="ic i-flag"></i> </span>
+  <h3>OpenSLES</h3>
+  </a>
+
+    </div>
+</div>
+
+  
+  <div class="wrap" id="comments"></div>
+
+
+        </div>
+        <div id="sidebar">
+          
+
+<div class="inner">
+
+  <div class="panels">
+    <div class="inner">
+      <div class="contents panel pjax" data-title="Contents">
+          <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%A8%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text"> 用法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1gradle%E9%85%8D%E7%BD%AE"><span class="toc-number">1.1.</span> <span class="toc-text"> 1.gradle 配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%E5%91%BD%E4%BB%A4%E8%A1%8C"><span class="toc-number">1.2.</span> <span class="toc-text"> 2. 命令行</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#cmakeliststxt-%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E7%BC%96%E5%86%99"><span class="toc-number">2.</span> <span class="toc-text"> CMakeLists.txt 配置文件编写</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">3.</span> <span class="toc-text"> 注意事项</span></a></li></ol>
+      </div>
+      <div class="related panel pjax" data-title="Related">
+      </div>
+      <div class="overview panel" data-title="Overview">
+        <div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="image" itemprop="image" alt="Luffy Xu"
+      data-src="/images/avatar.png">
+  <p class="name" itemprop="name">Luffy Xu</p>
+  <div class="description" itemprop="description">编程笔记 & 学渣的自救</div>
+</div>
+
+<nav class="state">
+    <div class="item posts">
+      <a href="/archives/">
+        <span class="count">31</span>
+        <span class="name">posts</span>
+      </a>
+    </div>
+    <div class="item tags">
+      <a href="/tags/">
+        <span class="count">33</span>
+        <span class="name">tags</span>
+      </a>
+    </div>
+</nav>
+
+<div class="social">
+      <span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWU=" title="https:&#x2F;&#x2F;github.com&#x2F;amehime"><i class="ic i-github"></i></span>
+      <span class="exturl item twitter" data-url="aHR0cHM6Ly90d2l0dGVyLmNvbS9hbWVoaW1l" title="https:&#x2F;&#x2F;twitter.com&#x2F;amehime"><i class="ic i-twitter"></i></span>
+      <span class="exturl item zhihu" data-url="aHR0cHM6Ly93d3cuemhpaHUuY29tL3Blb3BsZS9ydXJpc216aw==" title="https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;rurismzk"><i class="ic i-zhihu"></i></span>
+      <span class="exturl item music" data-url="aHR0cHM6Ly9tdXNpYy4xNjMuY29tLyMvdXNlci9ob21lP2lkPTEyODg2ODIz" title="https:&#x2F;&#x2F;music.163.com&#x2F;#&#x2F;user&#x2F;home?id&#x3D;12886823"><i class="ic i-cloud-music"></i></span>
+      <span class="exturl item weibo" data-url="aHR0cHM6Ly93ZWliby5jb20vYW1laGltZQ==" title="https:&#x2F;&#x2F;weibo.com&#x2F;amehime"><i class="ic i-weibo"></i></span>
+      <span class="exturl item about" data-url="aHR0cHM6Ly9hYm91dC5tZS9hbWVoaW1l" title="https:&#x2F;&#x2F;about.me&#x2F;amehime"><i class="ic i-address-card"></i></span>
+</div>
+
+<ul class="menu">
+  
+    
+  <li class="item">
+    <a href="/" rel="section"><i class="ic i-home"></i>Home</a>
+  </li>
+
+        
+  <li class="item dropdown">
+      <a href="javascript:void(0);"><i class="ic i-feather"></i>Posts</a>
+    <ul class="submenu">
+
+        
+  <li class="item">
+    <a href="/archives/" rel="section"><i class="ic i-list-alt"></i>Archives</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/categories/" rel="section"><i class="ic i-th"></i>Categories</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/tags/" rel="section"><i class="ic i-tags"></i>Tags</a>
+  </li>
+
+  </ul>
+    
+  <li class="item">
+    <a href="/friends/" rel="section"><i class="ic i-heart"></i>Friends</a>
+  </li>
+
+
+</ul>
+
+      </div>
+    </div>
+  </div>
+
+  <ul id="quick">
+    <li class="prev pjax">
+        <a href="/2022/04/23/%E6%95%B0%E5%AD%97%E7%9A%84%E7%BF%BB%E8%BD%AC/" rel="prev" title="Previous Post"><i class="ic i-chevron-left"></i></a>
+    </li>
+    <li class="up"><i class="ic i-arrow-up"></i></li>
+    <li class="down"><i class="ic i-arrow-down"></i></li>
+    <li class="next pjax">
+        <a href="/2022/05/22/OpenSLES%E7%AE%80%E4%BB%8B/" rel="next" title="Next Post"><i class="ic i-chevron-right"></i></a>
+    </li>
+    <li class="percent"></li>
+  </ul>
+</div>
+
+
+        </div>
+        <div class="dimmer"></div>
+      </div>
+    </main>
+    <footer id="footer">
+      <div class="inner">
+        <div class="widgets">
+          
+<div class="rpost pjax">
+  <h2>Random Posts</h2>
+  <ul>
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/04/06/Kotlin%E5%8D%8F%E7%A8%8B%E4%BD%BF%E7%94%A8/" title="Kotlin协程使用">Kotlin协程使用</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2016/04/01/%E5%BF%AB%E9%80%9F%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/" title="快速排序算法">快速排序算法</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/05/11/Cmake%E7%9A%84%E4%BD%BF%E7%94%A8/" title="Cmake的使用">Cmake的使用</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/05/22/OpenSLES%E7%AE%80%E4%BB%8B/" title="OpenSLES">OpenSLES</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/04/04/PathClassLoader%E4%B8%8EDexClassLoader-%E8%A7%A3%E6%9E%90/" title="PathClassLoader与DexClassLoader 解析">PathClassLoader与DexClassLoader 解析</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/03/26/ExoPlayer-%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%881%EF%BC%89/" title="ExoPlayer 源码解析（1）">ExoPlayer 源码解析（1）</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/04/15/ffmpeg%E5%85%A5%E9%97%A8-%E5%9C%A8Windows11%20%E4%B8%8B%E7%BC%96%E8%AF%91Android%E5%B9%B3%E5%8F%B0%E5%AF%B9%E5%BA%94SO/" title="ffmpeg 的编译">ffmpeg 的编译</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2017/07/10/OpenGL-ES2-0%E4%B8%AD%E7%9A%84%E5%85%89%E7%85%A7/" title="OpenGL ES2.0中的光照">OpenGL ES2.0中的光照</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/11/30/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%AE%97%E6%B3%95%E6%95%B4%E7%90%86/" title="二叉树算法整理">二叉树算法整理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2017/06/11/%E5%B8%8C%E5%B0%94%E6%8E%92%E5%BA%8F%E7%AE%97%E6%B3%95/" title="希尔排序算法">希尔排序算法</a></span>
+  </li>
+
+  </ul>
+</div>
+<div>
+  <h2>Recent Comments</h2>
+  <ul class="leancloud-recent-comment"></ul>
+</div>
+
+        </div>
+        <div class="status">
+  <div class="copyright">
+    
+    &copy; 2010 – 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="ic i-sakura rotate"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Luffy Xu @ Hanasaku</span>
+  </div>
+  <div class="count">
+    <span class="post-meta-item-icon">
+      <i class="ic i-chart-area"></i>
+    </span>
+    <span title="Symbols count total">76k words</span>
+
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="ic i-coffee"></i>
+    </span>
+    <span title="Reading time total">1:09</span>
+  </div>
+  <div class="powered-by">
+    Powered by <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span>
+  </div>
+</div>
+
+      </div>
+    </footer>
+  </div>
+<script data-config type="text/javascript">
+  var LOCAL = {
+    path: '2022/05/11/Cmake的使用/',
+    favicon: {
+      show: "（●´3｀●）Goooood",
+      hide: "(´Д｀)Booooom"
+    },
+    search : {
+      placeholder: "Search for Posts",
+      empty: "We didn't find any results for the search: ${query}",
+      stats: "${hits} results found in ${time} ms"
+    },
+    valine: true,fancybox: true,
+    copyright: 'Copied to clipboard successfully! <br> All articles in this blog are licensed under <i class="ic i-creative-commons"></i>BY-NC-SA.',
+    ignores : [
+      function(uri) {
+        return uri.includes('#');
+      },
+      function(uri) {
+        return new RegExp(LOCAL.path+"$").test(uri);
+      }
+    ]
+  };
+</script>
+
+<script src="https://cdn.polyfill.io/v2/polyfill.js"></script>
+
+<script src="//cdn.jsdelivr.net/combine/npm/pace-js@1.0.2/pace.min.js,npm/pjax@0.2.8/pjax.min.js,npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js,npm/animejs@3.2.0/lib/anime.min.js,npm/algoliasearch@4/dist/algoliasearch-lite.umd.js,npm/instantsearch.js@4/dist/instantsearch.production.min.js,npm/lozad@1/dist/lozad.min.js,npm/quicklink@2/dist/quicklink.umd.js"></script>
+
+<script src="/js/app.js?v=0.2.5"></script>
+
+
+
+
+</body>
+</html>

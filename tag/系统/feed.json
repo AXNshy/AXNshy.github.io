@@ -1,0 +1,19 @@
+{
+    "version": "https://jsonfeed.org/version/1",
+    "title": "花咲く • All posts by \"系统\" tag",
+    "description": "编程笔记 & 学渣的自救",
+    "home_page_url": "http://example.com",
+    "items": [
+        {
+            "id": "http://example.com/2022/03/30/Android%E7%B3%BB%E7%BB%9F%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/",
+            "url": "http://example.com/2022/03/30/Android%E7%B3%BB%E7%BB%9F%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/",
+            "title": "Android系统启动流程",
+            "date_published": "2022-03-29T16:12:13.000Z",
+            "content_html": "<p>Android 启动分 5 个阶段：</p>\n<h2 id=\"bootloader\"><a class=\"anchor\" href=\"#bootloader\">#</a> BootLoader</h2>\n<p>上电后引导芯片从指定位置加载 bootloader 程序，初始化 ram，<br />\n然后启动 linux 内核</p>\n<h2 id=\"linux内核\"><a class=\"anchor\" href=\"#linux内核\">#</a> Linux 内核</h2>\n<p>启动 linux 内核后，会初始化内存管理单元和缓存，进程管理。<br />\n加载驱动：Display Driver，Camera Driver, Input，Binder Driver 等。<br />\n最后启动 init 进程</p>\n<h2 id=\"init进程\"><a class=\"anchor\" href=\"#init进程\">#</a> init 进程</h2>\n<p>linux 内核启动中创建，是内核创建的第一个用户进程，pid 为 1，执行分两个阶段，分别在从内核态和用户态执行。</p>\n<ul>\n<li>\n<p>第一阶段，设置环境变量，创建挂载文件系统，设置 selinux，</p>\n</li>\n<li>\n<p>第二阶段，初始化启动属性服务，解析 init.rc 文件，启动 ServiceManager, 然后启动 Zygote 进程，最后自身进入一个无限循环等待事件处理。</p>\n</li>\n</ul>\n<h2 id=\"zygote\"><a class=\"anchor\" href=\"#zygote\">#</a> Zygote</h2>\n<p>创建 Java 虚拟机（Dalvik/ART）<br />\n注册 JNI 函数<br />\n通过 JNI 调用到 zygoteInit.java 类中的 main 方法，第一次进入 Java 世界。<br />\n创建一个 Socket 并监听来自 AMS 的 fork 请求<br />\n启动 system_server 进程</p>\n<h2 id=\"system_server\"><a class=\"anchor\" href=\"#system_server\">#</a> system_server</h2>\n<p>启动 binder 线程池<br />\n创建 SystemServiceManager 负责创建其他系统服务<br />\n创建 AMS,WMS,PWS,IMS 等系统服务</p>\n",
+            "tags": [
+                "Android",
+                "系统"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,552 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#FFF">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+
+<link rel="icon" type="image/ico" sizes="32x32" href="/images/favicon.ico">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+<link rel="alternate" type="application/rss+xml" title="花咲く" href="http://example.com/rss.xml" />
+<link rel="alternate" type="application/atom+xml" title="花咲く" href="http://example.com/atom.xml" />
+<link rel="alternate" type="application/json" title="花咲く" href="http://example.com/feed.json" />
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Mulish:300,300italic,400,400italic,700,700italic%7CFredericka%20the%20Great:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20JP:300,300italic,400,400italic,700,700italic%7CNoto%20Serif%20SC:300,300italic,400,400italic,700,700italic%7CInconsolata:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+
+<link rel="stylesheet" href="/css/app.css?v=0.2.5">
+
+  
+  <meta name="keywords" content="Android,插件化,Dalvik虚拟机" />
+
+
+<link rel="canonical" href="http://example.com/2022/04/04/PathClassLoader%E4%B8%8EDexClassLoader-%E8%A7%A3%E6%9E%90/">
+
+
+
+  <title>
+PathClassLoader与DexClassLoader 解析 |
+Hanasaku = 花咲く = blog</title>
+<meta name="generator" content="Hexo 6.1.0"></head>
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div id="loading">
+    <div class="cat">
+      <div class="body"></div>
+      <div class="head">
+        <div class="face"></div>
+      </div>
+      <div class="foot">
+        <div class="tummy-end"></div>
+        <div class="bottom"></div>
+        <div class="legs left"></div>
+        <div class="legs right"></div>
+      </div>
+      <div class="paw">
+        <div class="hands left"></div>
+        <div class="hands right"></div>
+      </div>
+    </div>
+  </div>
+  <div id="container">
+    <header id="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="inner">
+        <div id="brand">
+          <div class="pjax">
+          
+  <h1 itemprop="name headline">PathClassLoader与DexClassLoader 解析
+  </h1>
+  
+<div class="meta">
+  <span class="item" title="Created: 2022-04-04 23:06:50">
+    <span class="icon">
+      <i class="ic i-calendar"></i>
+    </span>
+    <span class="text">Posted on</span>
+    <time itemprop="dateCreated datePublished" datetime="2022-04-04T23:06:50+08:00">2022-04-04</time>
+  </span>
+  <span class="item" title="Symbols count in article">
+    <span class="icon">
+      <i class="ic i-pen"></i>
+    </span>
+    <span class="text">Symbols count in article</span>
+    <span>4.9k</span>
+    <span class="text">words</span>
+  </span>
+  <span class="item" title="Reading time">
+    <span class="icon">
+      <i class="ic i-clock"></i>
+    </span>
+    <span class="text">Reading time</span>
+    <span>4 mins.</span>
+  </span>
+</div>
+
+
+          </div>
+        </div>
+        <nav id="nav">
+  <div class="inner">
+    <div class="toggle">
+      <div class="lines" aria-label="Toggle navigation bar">
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </div>
+    </div>
+    <ul class="menu">
+      <li class="item title"><a href="/" rel="start">Hanasaku</a></li>
+    </ul>
+    <ul class="right">
+      <li class="item theme">
+        <i class="ic i-sun"></i>
+      </li>
+      <li class="item search">
+        <i class="ic i-search"></i>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+      </div>
+      <div id="imgs" class="pjax">
+        <ul>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1giclga70tsj20zk0m84mr.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gipexw3o58j20zk0m8e81.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gicitf0kl1j20zk0m87fe.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1giclhnx9glj20zk0m8npd.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1giclip4jbpj20zk0m87cv.jpg"></li>
+          <li class="item" data-background-image="https://tva2.sinaimg.cn/large/6833939bly1gicitht3xtj20zk0m8k5v.jpg"></li>
+        </ul>
+      </div>
+    </header>
+    <div id="waves">
+      <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+        <defs>
+          <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+        </defs>
+        <g class="parallax">
+          <use xlink:href="#gentle-wave" x="48" y="0" />
+          <use xlink:href="#gentle-wave" x="48" y="3" />
+          <use xlink:href="#gentle-wave" x="48" y="5" />
+          <use xlink:href="#gentle-wave" x="48" y="7" />
+        </g>
+      </svg>
+    </div>
+    <main>
+      <div class="inner">
+        <div id="main" class="pjax">
+          
+  <div class="article wrap">
+    
+<div class="breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
+<i class="ic i-home"></i>
+<span><a href="/">Home</a></span>
+</div>
+
+    <article itemscope itemtype="http://schema.org/Article" class="post block" lang="cn">
+  <link itemprop="mainEntityOfPage" href="http://example.com/2022/04/04/PathClassLoader%E4%B8%8EDexClassLoader-%E8%A7%A3%E6%9E%90/">
+
+  <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="image" content="/images/avatar.png">
+    <meta itemprop="name" content="Luffy Xu">
+    <meta itemprop="description" content="blog, 编程笔记 & 学渣的自救">
+  </span>
+
+  <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="花咲く">
+  </span>
+
+  <div class="body md" itemprop="articleBody">
+    
+
+    <h1 id="未完"><a class="anchor" href="#未完">#</a> 未完</h1>
+<h2 id="java中的classloader"><a class="anchor" href="#java中的classloader">#</a> Java 中的 ClassLoader</h2>
+<p>在 Java 中，类加载器的作用是通过一个类的全限定名获取描述这个类的二进制字节流，然后加载到虚拟机中生成类对象并提供引用。<br />
+对 Java 虚拟机来说，类加载器可以分为 2 中：</p>
+<ul>
+<li>启动类加载器。由 C++ 代码实现，是 Java 虚拟机的一部分</li>
+<li>其他加载器。由 Java 代码实现，独立于虚拟机，并且全都继承自 java.lang.ClassLoader 这个类。</li>
+</ul>
+<p>对于我们开发人员来说，类加载器由 3 种：</p>
+<ul>
+<li>bootstrap ClassLoader</li>
+<li>Extension ClassLoader 加载指定扩展包中的类</li>
+<li>Application ClassLoader  加载 ClassPath 指定路径上的类</li>
+</ul>
+<h2 id="双亲委派模型"><a class="anchor" href="#双亲委派模型">#</a> 双亲委派模型</h2>
+<p>双亲委派模型是一种类加载的模型，是被推荐使用的类加载模型。双亲委派模型的定义是每次去加载一个类时，先判断这个类是否加载过，如果没有加载过，那么判断有没有父类加载器，如果有父类加载器，那么先调用父类加载器的加载方法；如果父类加载器加载失败，那么就调用当前类加载器。</p>
+<p>使用双亲委派模型的好处：<br />
+使 Java 类与 Java 类加载器一起产生了优先级层次，保证了同一个类始终由一个类加载器去加载。</p>
+<p>双亲委派模型的实现：<br />
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">protected synchronized Class&lt;?&gt; loadClass(Stirng name,boolean resolve) throws ClassNotFoundException &#123;</span><br><span class="line">	Class c = findLoadedClass(name);</span><br><span class="line">	if(c == null)&#123;</span><br><span class="line">		try&#123;</span><br><span class="line">			if(parent != null)&#123;</span><br><span class="line">				//父类加载器存在，继续调用父类加载器的loadClass方法</span><br><span class="line">				c = parent.loadClass(name,false);</span><br><span class="line">			&#125;else&#123;</span><br><span class="line">				//父类加载器不存在，调用启动类加载器去加载</span><br><span class="line">				c = findBootstrapClassOrNull(name);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125; catch (ClassNotFoundException e)&#123;</span><br><span class="line">			</span><br><span class="line">		&#125;</span><br><span class="line">		//如果父类加载器和启动类加载器都加载失败，使用当前类加载器去加载</span><br><span class="line">		if ( c == null )&#123;</span><br><span class="line">			c = findClass(name);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	if(resolve)&#123;</span><br><span class="line">		resolveClass(c);</span><br><span class="line">	&#125;</span><br><span class="line">	return c;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="android-dalvik虚拟机中的类加载器"><a class="anchor" href="#android-dalvik虚拟机中的类加载器">#</a> Android Dalvik 虚拟机中的类加载器</h2>
+<h3 id="basedexclassloader"><a class="anchor" href="#basedexclassloader">#</a> BaseDexClassLoader</h3>
+<p>一个基于 Dex 的通用功能的 ClassLoader 实现，其核心代码如下：</p>
+<p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">//libcore/dalvik/src/main/java/dalvik/system/BaseDexClassLoader.java</span><br><span class="line">Class BaseDexClassLoader extends ClassLoader&#123;</span><br><span class="line"></span><br><span class="line">	private final DexPathList pathList;</span><br><span class="line">	//一个ClassLoader数组，用来加载pathList pathList中可能依赖的类和资源，用来实现	</span><br><span class="line">	//Android中的AndroidManifest.xml中&lt;use-library&gt;标签中的库</span><br><span class="line">	protected final ClassLoader[] sharedLibraryLoaders;</span><br><span class="line">	protected final ClassLoader[] sharedLibraryLoadersAfter;</span><br><span class="line">	</span><br><span class="line">	public BaseDexClassLoader(String dexPath,String librarySearchPath,</span><br><span class="line">		ClassLoader parent,ClassLoader[] sharedLibraryLoaders,</span><br><span class="line">		ClassLoader[] sharedLibraryLoadersAfter,boolean isTrust)&#123;</span><br><span class="line">		super(parent);</span><br><span class="line">		...</span><br><span class="line">		this.pathList = new DexPathList(this,dexPath,librarySearchPath,null,isTrust);</span><br><span class="line">		</span><br><span class="line">	</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">	protected synchronized Class&lt;?&gt; findClass(Stirng name,boolean resolve) throws ClassNotFoundException &#123;</span><br><span class="line">	</span><br><span class="line">		if(sharedLibraryLoaders != null)&#123;</span><br><span class="line">			for(ClassLoader loader : sharedLibraryLoaders)&#123;</span><br><span class="line">				try&#123;</span><br><span class="line">					return loader.loadClass(name);</span><br><span class="line">				&#125;catch(ClassNotFoundException ignore)&#123;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		List&lt;Throwable&gt; suppressedExceptions = new ArrayList&lt;Throwable&gt;();</span><br><span class="line">		Class c = dexPath.findClass(name,suppressedExceptions);</span><br><span class="line">		if(c == null)&#123;</span><br><span class="line">			return c;</span><br><span class="line">		&#125;</span><br><span class="line">		if(sharedLibraryLoadersAfter != null)&#123;</span><br><span class="line">			for(ClassLoader loader : sharedLibraryLoadersAfter)&#123;</span><br><span class="line">				try&#123;</span><br><span class="line">					return loader.loadClass(name);</span><br><span class="line">				&#125;catch(ClassNotFoundException ignore)&#123;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		if(c == null)&#123;</span><br><span class="line">			throw new ClassNotFoundException();</span><br><span class="line">		&#125;</span><br><span class="line">		return c;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<p>从上面可以看出，BaseDexClassLoader 并没有遵守 Java 的双亲委托模型。</p>
+<p>BaseDexClassLoader 将代码加载又委托给了 DexPathList 来进行加载。</p>
+<p><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">//libcore/dalvik/src/main/java/dalvik/system/DexPathList.java</span><br><span class="line">class DexPathList&#123;</span><br><span class="line">	Element[] dexElements;</span><br><span class="line">	public DexPathList(...)&#123;</span><br><span class="line">		...</span><br><span class="line">		dexElement = makePathElements(spliteDexPath(dexPath)</span><br><span class="line">			,null,null,classLoader,	isTrust);</span><br><span class="line">		</span><br><span class="line">		...</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">	//这里有关于热修复实现的知识点，就是将补丁 dex 文件放到 dexElements 数组靠前位置，</span><br><span class="line">	//这样在加载 class 时，优先找到补丁包中的 dex 文件，加载到 class 之后就不再寻找，从</span><br><span class="line">	//而原来的 apk 文件中同名的类就不会再使用，从而达到修复的目的</span><br><span class="line"></span><br><span class="line">	public Class&lt;?&gt; findClass(String name,List&lt;Throwable&gt; suppressed)&#123;</span><br><span class="line">		for(Element element : dexElements)&#123;</span><br><span class="line">			Class&lt;?&gt; clazz = element.findClass(name,classLoader,suppressed);</span><br><span class="line">			if(clazz != null)&#123;</span><br><span class="line">				return clazz;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		return null;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	public static Element[] makeDexElements(List&lt;File&gt; files,File optimizedDictionary,List&lt;IOException&gt; suppressedExceptions,ClassLoader classloader,boolean isTrusted)&#123;</span><br><span class="line">		Element[] elements = new Element[files.size()];</span><br><span class="line">		</span><br><span class="line">		for(Files file : files)&#123;</span><br><span class="line">			if(file.isDictionary())&#123;</span><br><span class="line">				elements[elementsPos++] = new Element(file);</span><br><span class="line">			&#125;else&#123;</span><br><span class="line">				if(file.isFile())&#123;</span><br><span class="line">					DexFile dex = null;</span><br><span class="line">					if(file.path.endWith(&quot;.dex&quot;))&#123;</span><br><span class="line">						dex = loadDexFile(file,optimizedDictionary,loader,elements);</span><br><span class="line">						if(dex != null)&#123;</span><br><span class="line">							elements[elementsPos++] = new Element(dex,null);</span><br><span class="line">						&#125;</span><br><span class="line">					&#125;else&#123;</span><br><span class="line">						dex = loadDexFile(file,optimizedDictionary,loader,elements);</span><br><span class="line">						if(dex == null)&#123;</span><br><span class="line">							elements[elementsPos++] = new Element(file);</span><br><span class="line">						&#125;else&#123;</span><br><span class="line">							elements[elementsPos++] = new Element(dex,file);</span><br><span class="line">						&#125;</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		return elements;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">	private static DexFile loadDexPath(File file,File optimizedDictionary,ClassLoader loader,Element[] elements)&#123;</span><br><span class="line">		if(optimizeDictory == null)&#123;</span><br><span class="line">			return new DexFile(file,loader,elements);</span><br><span class="line">		&#125;else&#123;</span><br><span class="line">			//创建一个文件，路径为optimizedDictionary指定文件夹内，file同名的文件。</span><br><span class="line">			String optimizedPath = optimizedPathFor(file,optimizedDictionary);</span><br><span class="line">			...</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">//libcore/dalvik/src/main/java/dalvik/system/DexFile.java</span><br><span class="line"></span><br><span class="line">final Class DexFile&#123;</span><br><span class="line">	private Object mCookie;</span><br><span class="line">	</span><br><span class="line">	public DexFile(File file,ClassLoader loader,DexPathList.Element[] elements)&#123;</span><br><span class="line">		mCookie = openDexFile(...);</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	</span><br><span class="line">	private static Object openDexFile()&#123;</span><br><span class="line">		return openDexFileNative(...);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></p>
+<h3 id="pathclassloader"><a class="anchor" href="#pathclassloader">#</a> PathClassLoader</h3>
+<p>只能加载已经安装过的 Apk</p>
+<h3 id="dexclassloader"><a class="anchor" href="#dexclassloader">#</a> DexClassLoader</h3>
+<p>可以加载 jar,apk,dex, 可以直接从 SD 卡加载未安装的 apk</p>
+
+      <div class="tags">
+          <a href="/tags/Android/" rel="tag"><i class="ic i-tag"></i> Android</a>
+          <a href="/tags/%E6%8F%92%E4%BB%B6%E5%8C%96/" rel="tag"><i class="ic i-tag"></i> 插件化</a>
+          <a href="/tags/Dalvik%E8%99%9A%E6%8B%9F%E6%9C%BA/" rel="tag"><i class="ic i-tag"></i> Dalvik虚拟机</a>
+      </div>
+  </div>
+
+   <footer>
+
+    <div class="meta">
+  <span class="item">
+    <span class="icon">
+      <i class="ic i-calendar-check"></i>
+    </span>
+    <span class="text">Edited on</span>
+    <time title="Modified: 2023-04-24 21:19:10" itemprop="dateModified" datetime="2023-04-24T21:19:10+08:00">2023-04-24</time>
+  </span>
+  <span id="2022/04/04/PathClassLoader与DexClassLoader-解析/" class="item leancloud_visitors" data-flag-title="PathClassLoader与DexClassLoader 解析" title="Views">
+      <span class="icon">
+        <i class="ic i-eye"></i>
+      </span>
+      <span class="text">Views</span>
+      <span class="leancloud-visitors-count"></span>
+      <span class="text">times</span>
+  </span>
+</div>
+
+      
+
+<div id="copyright">
+<ul>
+  <li class="author">
+    <strong>Post author:  </strong>Luffy Xu <i class="ic i-at"><em>@</em></i>花咲く
+  </li>
+  <li class="link">
+    <strong>Post link: </strong>
+    <a href="http://example.com/2022/04/04/PathClassLoader%E4%B8%8EDexClassLoader-%E8%A7%A3%E6%9E%90/" title="PathClassLoader与DexClassLoader 解析">http://example.com/2022/04/04/PathClassLoader与DexClassLoader-解析/</a>
+  </li>
+  <li class="license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGl2ZWNvbW1vbnMub3JnL2xpY2Vuc2VzL2J5LW5jLXNhLzQuMC9kZWVkLnpo"><i class="ic i-creative-commons"><em>(CC)</em></i>BY-NC-SA</span> unless stating additionally.
+  </li>
+</ul>
+</div>
+
+  </footer>
+
+</article>
+
+  </div>
+  
+
+<div class="post-nav">
+    <div class="item left">
+      
+
+  <a href="/2022/04/02/Android-%E6%BA%90%E7%A0%81%E4%B8%AD-C-%E7%9F%A5%E8%AF%86%E7%82%B9/" itemprop="url" rel="prev" data-background-image="https:&#x2F;&#x2F;tva2.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gicitspjpbj20zk0m81ky.jpg" title="Android 源码中 C++ 知识点">
+  <span class="type">Previous Post</span>
+  <span class="category"><i class="ic i-flag"></i> </span>
+  <h3>Android 源码中 C++ 知识点</h3>
+  </a>
+
+    </div>
+    <div class="item right">
+      
+
+  <a href="/2022/04/06/Kotlin%E5%8D%8F%E7%A8%8B%E4%BD%BF%E7%94%A8/" itemprop="url" rel="next" data-background-image="https:&#x2F;&#x2F;tva2.sinaimg.cn&#x2F;mw690&#x2F;6833939bly1gicliwyw55j20zk0m8hdt.jpg" title="Kotlin协程使用">
+  <span class="type">Next Post</span>
+  <span class="category"><i class="ic i-flag"></i> </span>
+  <h3>Kotlin协程使用</h3>
+  </a>
+
+    </div>
+</div>
+
+  
+  <div class="wrap" id="comments"></div>
+
+
+        </div>
+        <div id="sidebar">
+          
+
+<div class="inner">
+
+  <div class="panels">
+    <div class="inner">
+      <div class="contents panel pjax" data-title="Contents">
+          <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%9C%AA%E5%AE%8C"><span class="toc-number">1.</span> <span class="toc-text"> 未完</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#java%E4%B8%AD%E7%9A%84classloader"><span class="toc-number">1.1.</span> <span class="toc-text"> Java 中的 ClassLoader</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%8C%E4%BA%B2%E5%A7%94%E6%B4%BE%E6%A8%A1%E5%9E%8B"><span class="toc-number">1.2.</span> <span class="toc-text"> 双亲委派模型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#android-dalvik%E8%99%9A%E6%8B%9F%E6%9C%BA%E4%B8%AD%E7%9A%84%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8"><span class="toc-number">1.3.</span> <span class="toc-text"> Android Dalvik 虚拟机中的类加载器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#basedexclassloader"><span class="toc-number">1.3.1.</span> <span class="toc-text"> BaseDexClassLoader</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#pathclassloader"><span class="toc-number">1.3.2.</span> <span class="toc-text"> PathClassLoader</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#dexclassloader"><span class="toc-number">1.3.3.</span> <span class="toc-text"> DexClassLoader</span></a></li></ol></li></ol></li></ol>
+      </div>
+      <div class="related panel pjax" data-title="Related">
+      </div>
+      <div class="overview panel" data-title="Overview">
+        <div class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <img class="image" itemprop="image" alt="Luffy Xu"
+      data-src="/images/avatar.png">
+  <p class="name" itemprop="name">Luffy Xu</p>
+  <div class="description" itemprop="description">编程笔记 & 学渣的自救</div>
+</div>
+
+<nav class="state">
+    <div class="item posts">
+      <a href="/archives/">
+        <span class="count">31</span>
+        <span class="name">posts</span>
+      </a>
+    </div>
+    <div class="item tags">
+      <a href="/tags/">
+        <span class="count">33</span>
+        <span class="name">tags</span>
+      </a>
+    </div>
+</nav>
+
+<div class="social">
+      <span class="exturl item github" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWU=" title="https:&#x2F;&#x2F;github.com&#x2F;amehime"><i class="ic i-github"></i></span>
+      <span class="exturl item twitter" data-url="aHR0cHM6Ly90d2l0dGVyLmNvbS9hbWVoaW1l" title="https:&#x2F;&#x2F;twitter.com&#x2F;amehime"><i class="ic i-twitter"></i></span>
+      <span class="exturl item zhihu" data-url="aHR0cHM6Ly93d3cuemhpaHUuY29tL3Blb3BsZS9ydXJpc216aw==" title="https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;rurismzk"><i class="ic i-zhihu"></i></span>
+      <span class="exturl item music" data-url="aHR0cHM6Ly9tdXNpYy4xNjMuY29tLyMvdXNlci9ob21lP2lkPTEyODg2ODIz" title="https:&#x2F;&#x2F;music.163.com&#x2F;#&#x2F;user&#x2F;home?id&#x3D;12886823"><i class="ic i-cloud-music"></i></span>
+      <span class="exturl item weibo" data-url="aHR0cHM6Ly93ZWliby5jb20vYW1laGltZQ==" title="https:&#x2F;&#x2F;weibo.com&#x2F;amehime"><i class="ic i-weibo"></i></span>
+      <span class="exturl item about" data-url="aHR0cHM6Ly9hYm91dC5tZS9hbWVoaW1l" title="https:&#x2F;&#x2F;about.me&#x2F;amehime"><i class="ic i-address-card"></i></span>
+</div>
+
+<ul class="menu">
+  
+    
+  <li class="item">
+    <a href="/" rel="section"><i class="ic i-home"></i>Home</a>
+  </li>
+
+        
+  <li class="item dropdown">
+      <a href="javascript:void(0);"><i class="ic i-feather"></i>Posts</a>
+    <ul class="submenu">
+
+        
+  <li class="item">
+    <a href="/archives/" rel="section"><i class="ic i-list-alt"></i>Archives</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/categories/" rel="section"><i class="ic i-th"></i>Categories</a>
+  </li>
+
+        
+  <li class="item">
+    <a href="/tags/" rel="section"><i class="ic i-tags"></i>Tags</a>
+  </li>
+
+  </ul>
+    
+  <li class="item">
+    <a href="/friends/" rel="section"><i class="ic i-heart"></i>Friends</a>
+  </li>
+
+
+</ul>
+
+      </div>
+    </div>
+  </div>
+
+  <ul id="quick">
+    <li class="prev pjax">
+        <a href="/2022/04/02/Android-%E6%BA%90%E7%A0%81%E4%B8%AD-C-%E7%9F%A5%E8%AF%86%E7%82%B9/" rel="prev" title="Previous Post"><i class="ic i-chevron-left"></i></a>
+    </li>
+    <li class="up"><i class="ic i-arrow-up"></i></li>
+    <li class="down"><i class="ic i-arrow-down"></i></li>
+    <li class="next pjax">
+        <a href="/2022/04/06/Kotlin%E5%8D%8F%E7%A8%8B%E4%BD%BF%E7%94%A8/" rel="next" title="Next Post"><i class="ic i-chevron-right"></i></a>
+    </li>
+    <li class="percent"></li>
+  </ul>
+</div>
+
+
+        </div>
+        <div class="dimmer"></div>
+      </div>
+    </main>
+    <footer id="footer">
+      <div class="inner">
+        <div class="widgets">
+          
+<div class="rpost pjax">
+  <h2>Random Posts</h2>
+  <ul>
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/03/30/Android%E7%B3%BB%E7%BB%9F%E5%90%AF%E5%8A%A8%E6%B5%81%E7%A8%8B/" title="Android系统启动流程">Android系统启动流程</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2018/06/10/HLS%E7%9F%A5%E8%AF%86%E7%82%B9/" title="HLS知识点">HLS知识点</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/11/30/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%AE%97%E6%B3%95%E6%95%B4%E7%90%86/" title="二叉树算法整理">二叉树算法整理</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2023/04/25/Mac-M2%E6%9C%BA%E5%9E%8B%E5%BC%80%E5%8F%91%E9%97%AE%E9%A2%98/" title="Mac M2机型开发问题">Mac M2机型开发问题</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/05/29/FFmpeg%E4%B9%8B%E9%9F%B3%E8%A7%86%E9%A2%91%E5%90%8C%E6%AD%A5/" title="FFmpeg之音视频同步">FFmpeg之音视频同步</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/04/15/ffmpeg%E5%85%A5%E9%97%A8-%E5%9C%A8Windows11%20%E4%B8%8B%E7%BC%96%E8%AF%91Android%E5%B9%B3%E5%8F%B0%E5%AF%B9%E5%BA%94SO/" title="ffmpeg 的编译">ffmpeg 的编译</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/04/06/Kotlin%E5%8D%8F%E7%A8%8B%E4%BD%BF%E7%94%A8/" title="Kotlin协程使用">Kotlin协程使用</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/04/19/Z%E5%AD%97%E5%BD%A2%E5%8F%98%E6%8D%A2/" title="Z字形变换">Z字形变换</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/04/07/%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/" title="贪心算法">贪心算法</a></span>
+  </li>
+
+      
+  <li class="item">
+    
+<div class="breadcrumb">
+</div>
+
+    <span><a href="/2022/03/31/Android-%E8%93%9D%E7%89%99%E5%BA%94%E7%94%A8%E5%BC%80%E5%8F%91%E6%B5%81%E7%A8%8B/" title="Android 蓝牙应用开发流程">Android 蓝牙应用开发流程</a></span>
+  </li>
+
+  </ul>
+</div>
+<div>
+  <h2>Recent Comments</h2>
+  <ul class="leancloud-recent-comment"></ul>
+</div>
+
+        </div>
+        <div class="status">
+  <div class="copyright">
+    
+    &copy; 2010 – 
+    <span itemprop="copyrightYear">2023</span>
+    <span class="with-love">
+      <i class="ic i-sakura rotate"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Luffy Xu @ Hanasaku</span>
+  </div>
+  <div class="count">
+    <span class="post-meta-item-icon">
+      <i class="ic i-chart-area"></i>
+    </span>
+    <span title="Symbols count total">76k words</span>
+
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="ic i-coffee"></i>
+    </span>
+    <span title="Reading time total">1:09</span>
+  </div>
+  <div class="powered-by">
+    Powered by <span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & Theme.<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL2FtZWhpbWUvaGV4by10aGVtZS1zaG9rYQ==">Shoka</span>
+  </div>
+</div>
+
+      </div>
+    </footer>
+  </div>
+<script data-config type="text/javascript">
+  var LOCAL = {
+    path: '2022/04/04/PathClassLoader与DexClassLoader-解析/',
+    favicon: {
+      show: "（●´3｀●）Goooood",
+      hide: "(´Д｀)Booooom"
+    },
+    search : {
+      placeholder: "Search for Posts",
+      empty: "We didn't find any results for the search: ${query}",
+      stats: "${hits} results found in ${time} ms"
+    },
+    valine: true,fancybox: true,
+    copyright: 'Copied to clipboard successfully! <br> All articles in this blog are licensed under <i class="ic i-creative-commons"></i>BY-NC-SA.',
+    ignores : [
+      function(uri) {
+        return uri.includes('#');
+      },
+      function(uri) {
+        return new RegExp(LOCAL.path+"$").test(uri);
+      }
+    ]
+  };
+</script>
+
+<script src="https://cdn.polyfill.io/v2/polyfill.js"></script>
+
+<script src="//cdn.jsdelivr.net/combine/npm/pace-js@1.0.2/pace.min.js,npm/pjax@0.2.8/pjax.min.js,npm/whatwg-fetch@3.4.0/dist/fetch.umd.min.js,npm/animejs@3.2.0/lib/anime.min.js,npm/algoliasearch@4/dist/algoliasearch-lite.umd.js,npm/instantsearch.js@4/dist/instantsearch.production.min.js,npm/lozad@1/dist/lozad.min.js,npm/quicklink@2/dist/quicklink.umd.js"></script>
+
+<script src="/js/app.js?v=0.2.5"></script>
+
+
+
+
+</body>
+</html>

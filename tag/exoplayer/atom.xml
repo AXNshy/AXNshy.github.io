@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>http://example.com</id>
+    <title>花咲く • Posts by &#34;exoplayer&#34; tag</title>
+    <link href="http://example.com" />
+    <updated>2022-03-26T10:52:40.000Z</updated>
+    <category term="Android" />
+    <category term="图像处理" />
+    <category term="C++" />
+    <category term="蓝牙" />
+    <category term="系统" />
+    <category term="Camera" />
+    <category term="Cmake" />
+    <category term="音视频" />
+    <category term="FFmpeg" />
+    <category term="多媒体" />
+    <category term="ExoPlayer" />
+    <category term="流媒体协议" />
+    <category term="HLS" />
+    <category term="算法" />
+    <category term="LeetCode" />
+    <category term="开发" />
+    <category term="Mac" />
+    <category term="OpenGL ES" />
+    <category term="OpenGL ES2.0" />
+    <category term="OpenGL ES3.0" />
+    <category term="OpenSLES" />
+    <category term="插件化" />
+    <category term="Dalvik虚拟机" />
+    <category term="leetcode" />
+    <category term="ffmpeg" />
+    <category term="日语" />
+    <category term="歌词" />
+    <category term="排序算法" />
+    <category term="二叉树" />
+    <category term="Algorithm" />
+    <category term="数据结构" />
+    <category term="树" />
+    <category term="BFS" />
+    <entry>
+        <id>http://example.com/2022/03/26/ExoPlayer-%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%881%EF%BC%89/</id>
+        <title>ExoPlayer 源码解析（1）</title>
+        <link rel="alternate" href="http://example.com/2022/03/26/ExoPlayer-%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%EF%BC%881%EF%BC%89/"/>
+        <content type="html">&lt;h1 id=&#34;start&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#start&#34;&gt;#&lt;/a&gt; Start&lt;/h1&gt;
+&lt;h2 id=&#34;1exoplayer起播时序图&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#1exoplayer起播时序图&#34;&gt;#&lt;/a&gt; 1.ExoPlayer 起播时序图&lt;/h2&gt;
+&lt;p&gt;&lt;img data-src=&#34;https://tva1.sinaimg.cn/large/b5348f57gy1h0oaiq9lpej21e313iqpe.jpg&#34; alt=&#34;ExoPlayer播放.drawio&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;2exoplayer的初始化&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#2exoplayer的初始化&#34;&gt;#&lt;/a&gt; 2.ExoPlayer 的初始化&lt;/h2&gt;
+&lt;p&gt;先看看 ExoPlayer 的初始化&lt;/p&gt;
+&lt;p&gt;&lt;figure class=&#34;highlight plaintext&#34;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#34;gutter&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;1&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;2&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;3&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;4&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;5&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;6&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;7&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;8&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;9&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;10&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;11&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;12&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;13&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;14&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;15&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;16&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;17&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;18&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;19&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;20&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;21&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;22&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;23&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;24&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;25&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;26&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;27&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;28&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;29&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;30&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;31&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;32&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;33&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;34&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;35&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;36&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;37&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;38&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;39&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;40&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;41&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#34;code&#34;&gt;&lt;pre&gt;&lt;span class=&#34;line&#34;&gt;protected StyledPlayerView playerView;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;private DataSource.Factory dataSourceFactory;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;void onCreate(@Nullable Bundle savedInstanceState)&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	//创建&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	dataSourceFactory = DemoUtil.getDataSourceFactory(/* context= */ this);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	....&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	//获取在XML中声明的StyledPlayerView对象&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	playerView = findViewById(R.id.player_view);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	...&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;//初始化ExoPlayer&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;void initializePlayer()&amp;#123;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	//创建播放媒体列表对象&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	mediaItems = createMediaItems(intent);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	//创建渲染器工厂对象&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	RenderersFactory renderersFactory =  &lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;   DemoUtil.buildRenderersFactory(/* context= */ this, preferExtensionDecoders);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	//创建媒体通道选择器对象&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	trackSelector = new DefaultTrackSelector(/* context= */ this);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	...&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	//创建ExoPlayer对象&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	player =  new ExoPlayer.Builder(/* context= */ this)  &lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;       	.setRenderersFactory(renderersFactory)  //设置渲染器工厂对象  &lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;       	.setMediaSourceFactory(createMediaSourceFactory())    //设置媒体源工厂对象  &lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;       	.setTrackSelector(trackSelector)    //设置媒体通道选择器  &lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;       	.build();&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	player.setTrackSelectionParameters(trackSelectionParameters);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	//设置播放器事件回调&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	player.addListener(new PlayerEventListener());  &lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	//设置音频参数&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	player.setAudioAttributes(AudioAttributes.DEFAULT, /* handleAudioFocus= */ true);  &lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	//设置是否自动开始播放&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	player.setPlayWhenReady(startAutoPlay);&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	player.prepare();&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;	...&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&amp;#125;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;span class=&#34;line&#34;&gt;&lt;/span&gt;&lt;br&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;&lt;/p&gt;
+&lt;p&gt;上面就是 ExoPlayer 的播放代码，总结一下播放的流程：&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;创建 DataSource.Factory 工厂对象&lt;/li&gt;
+&lt;li&gt;创建 StyledPlayerView 播放器 UI 对象&lt;/li&gt;
+&lt;li&gt;创建 RenderersFactory 对象&lt;/li&gt;
+&lt;li&gt;创建 MediaSource.Factory 对象&lt;/li&gt;
+&lt;li&gt;创建 TrackSelector 对象&lt;/li&gt;
+&lt;li&gt;通过 ExoPlayer.Builder 对象构造 ExoPlayer 对象&lt;/li&gt;
+&lt;li&gt;添加播放器事件回调，设置默认音频参数&lt;/li&gt;
+&lt;li&gt;设置是否自动开始播放&lt;/li&gt;
+&lt;li&gt;开始起播&lt;/li&gt;
+&lt;/ol&gt;
+&lt;h2 id=&#34;3重要的对象&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#3重要的对象&#34;&gt;#&lt;/a&gt; 3. 重要的对象&lt;/h2&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;DataSource.Factory&lt;br /&gt;
+DataSource.Factory 是负责创建 DataSource 对象的工厂类&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;DataSource 代表 Uri 识别的数据源，根据不同的协议从不同媒体介质中获取视频数据流&lt;br /&gt;
+下面是 ExoPlayer 实现了的数据源类型&lt;br /&gt;
+&lt;img data-src=&#34;https://tvax3.sinaimg.cn/large/b5348f57gy1h0oajo70wvj20xz0pdb0a.jpg&#34; alt=&#34;DataSource实现类&#34; /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;StyledPlayerView&lt;br /&gt;
+ 播放器 UI 对象，包含了视频 UI，控制器 UI，字幕，专辑等&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;RenderersFactory&lt;br /&gt;
+RenderersFactory 是负责创建 Renderer 的工厂对象。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Renderer 渲染器&lt;br /&gt;
+ ExoPlayer 定义了 6 种 Renderer 对象：&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;VideoRenderer    视频渲染器，负责视频渲染，实现类有 MediaCodecVideoRenderer，还有 ffmpeg 扩展&lt;/li&gt;
+&lt;li&gt;AudioRenderer   音频渲染器&lt;/li&gt;
+&lt;li&gt;TextRenderer  字幕渲染器&lt;/li&gt;
+&lt;li&gt;MetadataRenderer  视频元数据渲染器&lt;/li&gt;
+&lt;li&gt;CameraMotionRenderer  相机动作渲染器，CameraMotionRenderer 是处理相机拍摄的视频播放时，相机在物理上可能会有旋转动作，导致相机拍摄的视频也会产生 rotation，所以在播放相机拍摄的视频时需要解析视频中的 rotation 属性，然后在 OpenGL ES 渲染的时候，将窗口进行旋转，使画面恢复正常方向。&lt;/li&gt;
+&lt;li&gt;MiscellaneousRenderer  混合渲染器 ，Google 暂时没有实现该渲染器，应该是留作扩展用。&lt;br /&gt;
+&lt;img data-src=&#34;https://tvax4.sinaimg.cn/large/b5348f57gy1h0oak2u83fj20y80ieasz.jpg&#34; alt=&#34;Renderer实现类&#34; /&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start=&#34;6&#34;&gt;
+&lt;li&gt;
+&lt;p&gt;MediaSource.Factory&lt;br /&gt;
+MediaSource.Factory 是负责构造 MediaSource 对象的工厂类&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;MediaSource 媒体源，ExoPlayer 使用 MediaSource 实现了多视频播放逻辑，还有不停了流媒体协议类型等。&lt;br /&gt;
+ExoPlayer 预定义的 MediaSource 类型：&lt;br /&gt;
+&lt;img data-src=&#34;https://tva2.sinaimg.cn/large/b5348f57gy1h0oakcx1ssj20xi0exk6h.jpg&#34; alt=&#34;MediaSource实现类&#34; /&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;TrackSelector&lt;br /&gt;
+ 选择器：&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;媒体流：用于在播放时选择容器中封装的的不同的视频、音频通道，比如在 HLS\DASH 流播放时根据网络带宽，设备性能选择不同分辨率的流。&lt;/li&gt;
+&lt;li&gt;通道：播放时根据情况选择视频中不同的视频 \ 音频 \ 字幕通道。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h1 id=&#34;end&#34;&gt;&lt;a class=&#34;anchor&#34; href=&#34;#end&#34;&gt;#&lt;/a&gt; End&lt;/h1&gt;
+&lt;p&gt;这里先粗略分析了一下 ExoPlayer 大致播放流程，还有部分的类的介绍，后面再根据情况对不同模块进行分析。&lt;/p&gt;
+</content>
+        <category term="Android" />
+        <category term="多媒体" />
+        <category term="ExoPlayer" />
+        <updated>2022-03-26T10:52:40.000Z</updated>
+    </entry>
+</feed>

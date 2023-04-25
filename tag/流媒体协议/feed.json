@@ -1,0 +1,20 @@
+{
+    "version": "https://jsonfeed.org/version/1",
+    "title": "花咲く • All posts by \"流媒体协议\" tag",
+    "description": "编程笔记 & 学渣的自救",
+    "home_page_url": "http://example.com",
+    "items": [
+        {
+            "id": "http://example.com/2018/06/10/HLS%E7%9F%A5%E8%AF%86%E7%82%B9/",
+            "url": "http://example.com/2018/06/10/HLS%E7%9F%A5%E8%AF%86%E7%82%B9/",
+            "title": "HLS知识点",
+            "date_published": "2018-06-10T12:07:41.000Z",
+            "content_html": "<h2 id=\"hls协议简介\"><a class=\"anchor\" href=\"#hls协议简介\">#</a> HLS 协议简介</h2>\n<p>全称 HTTP Live Streaming，是由苹果公司开发的用于支持在线音视频播放的流媒体协议，该协议是基于 HTTP 协议实现的。</p>\n<p>HLS 是由 m3u8 配置文件和 TS 分片文件组成的。</p>\n<h2 id=\"m3u8\"><a class=\"anchor\" href=\"#m3u8\">#</a> m3u8</h2>\n<p>m3u8 是 m3u 文件的一种，是 HLS 定义的配置文件，客户端从该文件中解析出播放所需的元数据后，从中寻找可用的媒体流的地址，然后下载媒体流进行播放。</p>\n<p>m3u8 其实是一个播放列表文件 playlist，里面记录了可用的媒体片段信息，m3u8 文件支持嵌套。</p>\n<p>m3u8 文件结构：</p>\n<ul>\n<li>EXTM3U    文件第一行配置指定这是一个 M3u8 文件</li>\n<li>EXT-X-MEDIA-SEQUENCE  第一个 TS 分片起始位置序号；直播时则为直播段起始位置</li>\n<li>EXT-X-TARGETDURATION 每个分片最大时长</li>\n<li>EXT-X-ALLOW-CACHE 是否运行缓存</li>\n<li>EXT-X-ENDLIST 文件结束符，如果是直播流，则没有文件结束符</li>\n<li>EXTINF 附加信息，分片的时长，带宽等</li>\n<li>EXT-X-VERSION m3u8 版本号</li>\n<li>EXT-X-DISCONTINUITY 分片中断</li>\n<li>EXT-X-PLAYLIST-TYPE 流媒体类型\n<ul>\n<li>类型： VOD  表明是点播源，文件中应该也有 ENDLIST 标签</li>\n<li>类型： EVENT   表明是直播源，文件中应该没有 ENDLIST 标签，不允许服务器修改已有的数据，但是可以在文件结尾添加新数据。</li>\n</ul>\n</li>\n<li>EXT-X-KEY  是否加密解析</li>\n</ul>\n<h3 id=\"广告插入\"><a class=\"anchor\" href=\"#广告插入\">#</a> 广告插入</h3>\n<p>可以在 m3u8 中插入广告的 ts，实现广告的播放，但是有个问题是广告的视频编码格式与原视频可能不一样，所以需要在广告的 TS 分片前后加上 DISCONTINUITY 这个标签，表明视频前后中断，需要客户端去处理该情况。</p>\n<h2 id=\"mpeg-2-transport-stream\"><a class=\"anchor\" href=\"#mpeg-2-transport-stream\">#</a> MPEG-2 Transport Stream</h2>\n<p>更有弹性避免包丢失和损坏</p>\n<p>ts 流的数据包固定大小为 188 字节，由 4 个字节的头和 184 字节组成，</p>\n",
+            "tags": [
+                "多媒体",
+                "流媒体协议",
+                "HLS"
+            ]
+        }
+    ]
+}
